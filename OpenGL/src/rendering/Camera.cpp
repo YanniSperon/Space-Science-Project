@@ -64,7 +64,9 @@ void Camera::MoveForward()
 	}*/
 
 	if (hasControls) {
-		cameraTranslation.z += -movementSpeed;
+		if (cameraTranslation.z > 1.75f) {
+			cameraTranslation.z += -movementSpeed;
+		}
 	}
 }
 

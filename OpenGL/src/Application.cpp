@@ -22,6 +22,7 @@
 #include "glm/gtx/quaternion.hpp"
 #include "primitives/Vertex.h"
 #include "primitives/ShapeGenerator.h"
+#include "stb_image/stb_image.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
@@ -154,6 +155,34 @@ static void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 		glViewport(0, 0, width, height);
 	}
 }
+static unsigned int loadSpriteSheet(const std::string texDir, const std::string texName, GLint textureWrapS, GLint textureWrapT, GLint textureMinFilter, GLint textureMaxFilter) {
+	unsigned int texID;
+	glGenTextures(1, &texID);
+	glBindTexture(GL_TEXTURE_2D, texID);
+	stbi_set_flip_vertically_on_load(1);
+
+	int width, height, nrChannels;
+	std::string str = texDir + texName;
+	const char* c = str.c_str();
+	unsigned char* data = stbi_load(c, &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMaxFilter);
+	return texID;
+}
 
 int main(void)
 {
@@ -198,11 +227,21 @@ int main(void)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 
-		Object object = Object(type::blankModel, "", "plane.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -3.0f, -3.0f));
+		unsigned int sprites = loadSpriteSheet("", "sprites1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		unsigned int bckgrnd = loadSpriteSheet("", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		std::vector<Object> objects;
+		unsigned int j = 0;
+		for (unsigned int i = 0; i < 100; i++) {
+			if (i % 10 == 0) {
+				j++;
+			}
+			Object temp = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i, j, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0625f, 0.9375f), glm::vec2(0.125f, 1.0f), sprites);
+			objects.push_back(temp);
+		}
+		Object player = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), sprites);
+		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
+		
 
-		PhysicsBody player = PhysicsBody(type::cubeModel, "", "", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), "", "cow.png",
-			1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-			1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, false);
@@ -216,6 +255,7 @@ int main(void)
 		
 		while (!glfwWindowShouldClose(window))
 		{
+			glClearColor(0.3f, 0.7f, 0.95f, 1.0f);
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			ImGui_ImplGlfwGL3_NewFrame();
 
@@ -242,17 +282,19 @@ int main(void)
 			///////////////////////////////////////////////////////////////////////////
 			camera.ChangeMovementSpeed(movementSpeed);
 			camera.BringWith(player);
-			
+			///////////////////////////////////////////////////////////////////////////
 			glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
 			glm::mat4 projectionMatrix;
 			if (currentWidth > 0 && currentHeight > 0) {
 				projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 100.0f);
 			}
 			///////////////////////////////////////////////////////////////////////////
-			object.Draw(viewMatrix, projectionMatrix);
-			///////////////////////////////////////////////////////////////////////////
 			player.Draw(viewMatrix, projectionMatrix);
+			background.Draw(viewMatrix, projectionMatrix);
 			///////////////////////////////////////////////////////////////////////////
+			for (unsigned int i = 0; i < 100; i++) {
+				objects[i].Draw(viewMatrix, projectionMatrix);
+			}
 
 
 			{

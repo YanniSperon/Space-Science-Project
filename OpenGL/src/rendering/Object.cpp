@@ -187,6 +187,37 @@ Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm:
 	shader.Unbind();
 }
 
+Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, unsigned int& tex)
+	: Mesh(type, rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex)
+{
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, GetShape().vertexBufferSize(), GetShape().vertices, GL_STATIC_DRAW);
+
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 6));
+
+
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetShape().indexBufferSize(), GetShape().indices, GL_STATIC_DRAW);
+
+	numIndices = (GLsizei)GetShape().numIndices;
+
+	GetShape().cleanUp();
+
+	shader.Bind();
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	shader.Unbind();
+}
+
 Object::~Object()
 {
 
@@ -200,9 +231,27 @@ void Object::Draw(glm::mat4 view, glm::mat4 proj)
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
 }
 
+void Object::Draw2D(glm::mat4 view, glm::mat4 proj)
+{
+	Bind2D();
+	glm::mat4 MVP = proj * view * GetModelTransformMatrix();
+	shader.SetUniformMat4f("MVP", MVP);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+}
+
 void Object::Bind()
 {
 	glBindTexture(GL_TEXTURE_2D, texID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 3));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 6));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	shader.Bind();
+}
+
+void Object::Bind2D()
+{
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 3));

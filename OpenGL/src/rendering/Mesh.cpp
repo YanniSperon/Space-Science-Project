@@ -22,6 +22,9 @@ Mesh::Mesh(type type, std::string dir, std::string name)
 	else if (type == type::texturedModel) {
 		shape = ShapeGenerator::loadTexturedShape(dir, name, minExtents, maxExtents);
 	}
+	else if (type == type::rectangle) {
+		shape = ShapeGenerator::loadRectangle(glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+	}
 	else {
 		shape = ShapeGenerator::makeTriangle(minExtents, maxExtents);
 	}
@@ -38,6 +41,9 @@ Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec
 	}
 	else if (type == type::texturedModel) {
 		shape = ShapeGenerator::loadTexturedShape(dir, name, minExtents, maxExtents);
+	}
+	else if (type == type::rectangle) {
+		shape = ShapeGenerator::loadRectangle(glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
 	}
 	else {
 		shape = ShapeGenerator::makeTriangle(minExtents, maxExtents);
@@ -56,8 +62,26 @@ Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec
 	else if (type == type::texturedModel) {
 		shape = ShapeGenerator::loadTexturedShape(dir, name, minExtents, maxExtents);
 	}
+	else if (type == type::rectangle) {
+		shape = ShapeGenerator::loadRectangle(glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+	}
 	else {
 		shape = ShapeGenerator::makeTriangle(minExtents, maxExtents);
+	}
+}
+
+Mesh::Mesh(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord)
+	: directory(""), fileName(""), rotation(rot), translation(trans)
+{
+	// Only supports primitives
+	if (type == type::cubeModel) {
+		shape = ShapeGenerator::makeCube(glm::vec3(minExtents.x, minExtents.y, z), glm::vec3(maxExtents.x, maxExtents.y, z));
+	}
+	else if (type == type::rectangle) {
+		shape = ShapeGenerator::loadRectangle(minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord);
+	}
+	else {
+		shape = ShapeGenerator::makeTriangle(glm::vec3(minExtents.x, minExtents.y, z), glm::vec3(maxExtents.x, maxExtents.y, z));
 	}
 }
 
