@@ -1,0 +1,5 @@
+fullscreen=false
+initialWidth=1920
+initialHeight=1080
+mouseSensitivity=0.005f
+FOV=90.0f
