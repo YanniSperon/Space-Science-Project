@@ -36,6 +36,11 @@ glm::mat4 Camera::GetViewTransformMatrix()
 	return glm::lookAt(cameraTranslation, cameraTranslation + viewDirection, upDirection);
 }
 
+glm::vec3 Camera::GetTranslation()
+{
+	return cameraTranslation;
+}
+
 void Camera::LookAt(double xpos, double ypos)
 {
 	//if (hasControls) {
@@ -78,7 +83,9 @@ void Camera::MoveBackward()
 	}*/
 
 	if (hasControls) {
-		cameraTranslation.z += movementSpeed;
+		if (cameraTranslation.z < 10.0f) {
+			cameraTranslation.z += movementSpeed;
+		}
 	}
 }
 

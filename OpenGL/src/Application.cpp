@@ -15,6 +15,7 @@
 #include "BoundingSphere.h"
 #include "AxisAlignedBoundingBox.h"
 #include "Plane.h"
+#include "Sprite.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -155,8 +156,8 @@ static void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 		glViewport(0, 0, width, height);
 	}
 }
-static unsigned int loadSpriteSheet(const std::string texDir, const std::string texName, GLint textureWrapS, GLint textureWrapT, GLint textureMinFilter, GLint textureMaxFilter) {
-	unsigned int texID;
+static GLuint loadSpriteSheet(const std::string texDir, const std::string texName, GLint textureWrapS, GLint textureWrapT, GLint textureMinFilter, GLint textureMaxFilter) {
+	GLuint texID;
 	glGenTextures(1, &texID);
 	glBindTexture(GL_TEXTURE_2D, texID);
 	stbi_set_flip_vertically_on_load(1);
@@ -166,21 +167,20 @@ static unsigned int loadSpriteSheet(const std::string texDir, const std::string 
 	const char* c = str.c_str();
 	unsigned char* data = stbi_load(c, &width, &height, &nrChannels, 0);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMaxFilter);
+
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
-
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMaxFilter);
 	return texID;
 }
 
@@ -227,21 +227,19 @@ int main(void)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 
-		unsigned int sprites = loadSpriteSheet("", "sprites1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		unsigned int bckgrnd = loadSpriteSheet("", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		std::vector<Object> objects;
-		unsigned int j = 0;
-		for (unsigned int i = 0; i < 100; i++) {
-			if (i % 10 == 0) {
-				j++;
-			}
-			Object temp = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i, j, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0625f, 0.9375f), glm::vec2(0.125f, 1.0f), sprites);
-			objects.push_back(temp);
-		}
-		Object player = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), sprites);
+
+		GLuint frames[4] = { 
+			loadSpriteSheet("", "frame1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("", "frame2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("", "frame3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
+		};
+		GLuint bckgrnd = loadSpriteSheet("", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+
+		Sprite player = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
 		
-
+		
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, false);
@@ -252,6 +250,7 @@ int main(void)
 
 		float timeConstant = 1.0f;
 		float currentTime = 0.0f;
+		float timer = 0.0f;
 		
 		while (!glfwWindowShouldClose(window))
 		{
@@ -289,14 +288,15 @@ int main(void)
 				projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 100.0f);
 			}
 			///////////////////////////////////////////////////////////////////////////
-			player.Draw(viewMatrix, projectionMatrix);
 			background.Draw(viewMatrix, projectionMatrix);
-			///////////////////////////////////////////////////////////////////////////
-			for (unsigned int i = 0; i < 100; i++) {
-				objects[i].Draw(viewMatrix, projectionMatrix);
+			if (timer > 0.25f) {
+				player.Play(frames);
+				timer = 0.0f;
 			}
+			player.Draw(viewMatrix, projectionMatrix);
+			///////////////////////////////////////////////////////////////////////////
 
-
+			timer += 1.0f / 144.0f;
 			{
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}

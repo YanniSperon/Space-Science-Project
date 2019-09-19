@@ -20,6 +20,7 @@ public:
 	void EnableMovementControls();
 	void DisableMovementControls();
 	glm::mat4 GetViewTransformMatrix();
+	glm::vec3 GetTranslation();
 	void LookAt(double xpos, double ypos);
 	void MoveForward();
 	void MoveBackward();

@@ -142,6 +142,7 @@
     <ClCompile Include="src\primitives\ShapeGenerator.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\rendering\Shader.cpp" />
+    <ClCompile Include="src\rendering\Sprite.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="src\primitives\ShapeData.h" />
     <ClInclude Include="src\primitives\Vertex.h" />
     <ClInclude Include="src\rendering\Shader.h" />
+    <ClInclude Include="src\rendering\Sprite.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\func_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\func_exponential.hpp" />
