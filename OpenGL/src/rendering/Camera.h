@@ -31,4 +31,5 @@ public:
 	void ChangeMovementSpeed(float newSpeed);
 
 	void BringWith(Object& obj);
+	void Follow(Object& obj);
 };

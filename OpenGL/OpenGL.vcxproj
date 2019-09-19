@@ -132,6 +132,7 @@
     <ClCompile Include="src\physics\BoundingSphere.cpp" />
     <ClCompile Include="src\physics\Collidable.cpp" />
     <ClCompile Include="src\physics\IntersectData.cpp" />
+    <ClCompile Include="src\physics\SpritePhysicsBody.cpp" />
     <ClCompile Include="src\rendering\Object.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\rendering\Camera.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="src\physics\BoundingSphere.h" />
     <ClInclude Include="src\physics\Collidable.h" />
     <ClInclude Include="src\physics\IntersectData.h" />
+    <ClInclude Include="src\physics\SpritePhysicsBody.h" />
     <ClInclude Include="src\rendering\Object.h" />
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\rendering\Camera.h" />

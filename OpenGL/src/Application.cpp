@@ -16,6 +16,7 @@
 #include "AxisAlignedBoundingBox.h"
 #include "Plane.h"
 #include "Sprite.h"
+#include "SpritePhysicsBody.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -59,33 +60,33 @@ static int currentHeight = initialHeight;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+	if ((key == GLFW_KEY_W || key == GLFW_KEY_UP) && action == GLFW_PRESS) {
 		wPressed = true;
 	}
-	else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+	else if ((key == GLFW_KEY_W || key == GLFW_KEY_UP) && action == GLFW_RELEASE) {
 		wPressed = false;
 	}
 
-	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+	if ((key == GLFW_KEY_S || key == GLFW_KEY_DOWN) && action == GLFW_PRESS) {
 		sPressed = true;
 	}
-	else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+	else if ((key == GLFW_KEY_S || key == GLFW_KEY_DOWN) && action == GLFW_RELEASE) {
 		sPressed = false;
 	}
 
 
 
-	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+	if ((key == GLFW_KEY_A || key == GLFW_KEY_LEFT) && action == GLFW_PRESS) {
 		aPressed = true;
 	}
-	else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+	else if ((key == GLFW_KEY_A || key == GLFW_KEY_LEFT) && action == GLFW_RELEASE) {
 		aPressed = false;
 	}
 
-	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+	if ((key == GLFW_KEY_D || key == GLFW_KEY_RIGHT) && action == GLFW_PRESS) {
 		dPressed = true;
 	}
-	else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+	else if ((key == GLFW_KEY_D || key == GLFW_KEY_RIGHT) && action == GLFW_RELEASE) {
 		dPressed = false;
 	}
 
@@ -225,6 +226,7 @@ int main(void)
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_ADD);
 		glEnable(GL_DEPTH_TEST);
 
 
@@ -236,7 +238,7 @@ int main(void)
 		};
 		GLuint bckgrnd = loadSpriteSheet("", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
-		Sprite player = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0);
+		SpritePhysicsBody player = SpritePhysicsBody(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f));
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
 		
 		
@@ -272,15 +274,18 @@ int main(void)
 				camera.StrafeRight();
 			}
 			if (spacePressed) {
-				camera.MoveUp();
+				player.Jump(glm::vec3(0.0f, 1.0f, 0.0f));
 			}
 			if (controlPressed) {
 				camera.MoveDown();
 			}
 
+			if (!tPressed) {
+				camera.Follow(player);
+			}
+
 			///////////////////////////////////////////////////////////////////////////
 			camera.ChangeMovementSpeed(movementSpeed);
-			camera.BringWith(player);
 			///////////////////////////////////////////////////////////////////////////
 			glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
 			glm::mat4 projectionMatrix;
@@ -294,6 +299,9 @@ int main(void)
 				timer = 0.0f;
 			}
 			player.Draw(viewMatrix, projectionMatrix);
+			float timeAddition = (1.0f / 144.0f) * timeConstant;
+			currentTime += timeAddition;
+			player.Update(timeAddition);
 			///////////////////////////////////////////////////////////////////////////
 
 			timer += 1.0f / 144.0f;
