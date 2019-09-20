@@ -23,9 +23,15 @@ void SpritePhysicsBody::Update(float delta)
 	TranslateAddVec3(linearVelocity * delta);
 }
 
+void SpritePhysicsBody::ReverseLastUpdate(float delta)
+{
+	linearVelocity -= gravitationalAcceleration * delta;
+	TranslateSubtractVec3(linearVelocity * delta);
+}
+
 void SpritePhysicsBody::Stop()
 {
-	linearVelocity = angularVelocity = force = torque = glm::vec3(0.0f, 0.0f, 0.0f);
+	linearVelocity = angularVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void SpritePhysicsBody::Jump(glm::vec3 vel)

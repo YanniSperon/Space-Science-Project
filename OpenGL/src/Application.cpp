@@ -13,10 +13,12 @@
 #include "Player.h"
 #include "PhysicsBody.h"
 #include "BoundingSphere.h"
-#include "AxisAlignedBoundingBox.h"
+#include "IntersectData.h"
 #include "Plane.h"
 #include "Sprite.h"
 #include "SpritePhysicsBody.h"
+#include "Timer.h"
+#include "CollidableSprite.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -218,9 +220,6 @@ int main(void)
 
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		/*if (glfwRawMouseMotionSupported())
-			glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-		glfwSetCursorPosCallback(window, cursorPositionCallback);*/
 		glfwSetKeyCallback(window, keyCallback);
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
@@ -237,10 +236,14 @@ int main(void)
 			loadSpriteSheet("", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
 		GLuint bckgrnd = loadSpriteSheet("", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint sphereCow = loadSpriteSheet("", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
-		SpritePhysicsBody player = SpritePhysicsBody(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f));
+		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f));
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
-		
+		//CollidableSprite ground = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		CollidableSprite ground[] = {
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f))
+		};
 		
 
 		ImGui::CreateContext();
@@ -251,8 +254,12 @@ int main(void)
 		glfwSetCursorPos(window, 0.0, 0.0);
 
 		float timeConstant = 1.0f;
-		float currentTime = 0.0f;
-		float timer = 0.0f;
+		bool canJump = true;
+		
+		Timer jumpTimer = Timer(1.0f);
+		Timer spriteTimer = Timer(0.25f);
+		spriteTimer.Start();
+		bool movePlayer = false;
 		
 		while (!glfwWindowShouldClose(window))
 		{
@@ -260,6 +267,7 @@ int main(void)
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			ImGui_ImplGlfwGL3_NewFrame();
 
+			float deltaTime = (1.0f / 144.0f) * timeConstant;
 
 			if (wPressed) {
 				camera.MoveForward();
@@ -274,7 +282,11 @@ int main(void)
 				camera.StrafeRight();
 			}
 			if (spacePressed) {
-				player.Jump(glm::vec3(0.0f, 1.0f, 0.0f));
+				if (canJump) {
+					player.Jump(glm::vec3(0.0f, 10.0f, 0.0f));
+					jumpTimer.Start();
+					canJump = false;
+				}
 			}
 			if (controlPressed) {
 				camera.MoveDown();
@@ -282,6 +294,9 @@ int main(void)
 
 			if (!tPressed) {
 				camera.Follow(player);
+			}
+			else {
+				movePlayer = true;
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -294,17 +309,28 @@ int main(void)
 			}
 			///////////////////////////////////////////////////////////////////////////
 			background.Draw(viewMatrix, projectionMatrix);
-			if (timer > 0.25f) {
+			///////////////////////////////////////////////////////////////////////////
+			spriteTimer.ElapseTime(deltaTime);
+			if (spriteTimer.HasFinished()) {
 				player.Play(frames);
-				timer = 0.0f;
+				spriteTimer.Reset(0.25f);
+				spriteTimer.Start();
 			}
+			///////////////////////////////////////////////////////////////////////////
+			jumpTimer.ElapseTime(deltaTime);
+			if (jumpTimer.HasFinished()) {
+				canJump = true;
+				jumpTimer.Reset(1.0f);
+			}
+			///////////////////////////////////////////////////////////////////////////
 			player.Draw(viewMatrix, projectionMatrix);
-			float timeAddition = (1.0f / 144.0f) * timeConstant;
-			currentTime += timeAddition;
-			player.Update(timeAddition);
+			if (movePlayer) {
+				player.UpdateCollision(deltaTime, ground, 1);
+			}
+			///////////////////////////////////////////////////////////////////////////
+			ground[0].Draw(viewMatrix, projectionMatrix);
 			///////////////////////////////////////////////////////////////////////////
 
-			timer += 1.0f / 144.0f;
 			{
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}

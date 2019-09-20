@@ -35,7 +35,9 @@ public:
 	void TranslateVec3(glm::vec3 trans);
 	void TranslateAdd3f(float x, float y, float z);
 	void TranslateAddVec3(glm::vec3 trans);
-	glm::vec3 GetTranslation();
+	void TranslateSubtract3f(float x, float y, float z);
+	void TranslateSubtractVec3(glm::vec3 trans);
+	glm::vec3 GetTranslation() const;
 	glm::vec3 GetRotation();
 	ShapeData GetShape();
 	void SetShape(ShapeData newShape);

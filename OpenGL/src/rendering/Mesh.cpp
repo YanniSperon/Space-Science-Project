@@ -141,7 +141,19 @@ void Mesh::TranslateAddVec3(glm::vec3 trans)
 	translation += trans;
 }
 
-glm::vec3 Mesh::GetTranslation()
+void Mesh::TranslateSubtract3f(float x, float y, float z)
+{
+	translation.x -= x;
+	translation.y -= y;
+	translation.z -= z;
+}
+
+void Mesh::TranslateSubtractVec3(glm::vec3 trans)
+{
+	translation -= trans;
+}
+
+glm::vec3 Mesh::GetTranslation() const
 {
 	return translation;
 }

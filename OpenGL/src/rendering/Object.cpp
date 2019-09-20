@@ -229,6 +229,7 @@ void Object::Draw(glm::mat4 view, glm::mat4 proj)
 	glm::mat4 MVP = proj * view * GetModelTransformMatrix();
 	shader.SetUniformMat4f("MVP", MVP);
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+	Unbind();
 }
 
 void Object::Bind()

@@ -52,8 +52,8 @@ AxisAlignedBoundingBox::~AxisAlignedBoundingBox()
 
 IntersectData AxisAlignedBoundingBox::IntersectAxisAlignedBoundingBox(const AxisAlignedBoundingBox& other) const
 {
-	glm::vec3 distances1 = other.GetMinExtents() - maxExtents;
-	glm::vec3 distances2 = minExtents - other.GetMaxExtents();
+	glm::vec3 distances1 = other.GetMinExtents() - GetMaxExtents();
+	glm::vec3 distances2 = GetMinExtents() - other.GetMaxExtents();
 	glm::vec3 distances = Max(distances1, distances2);
 
 	float maxDist = MaxValue(distances);
