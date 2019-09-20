@@ -6,6 +6,7 @@
 class Camera {
 public:
 	bool hasControls;
+	bool isFollowing;
 	float movementSpeed;
 	glm::vec3 viewDirection;
 	glm::vec3 upDirection;
@@ -24,12 +25,13 @@ public:
 	void LookAt(double xpos, double ypos);
 	void MoveForward();
 	void MoveBackward();
-	void StrafeLeft();
-	void StrafeRight();
+	void StrafeLeft(Object& obj);
+	void StrafeRight(Object& obj);
 	void MoveUp();
 	void MoveDown();
 	void ChangeMovementSpeed(float newSpeed);
 
 	void BringWith(Object& obj);
 	void Follow(Object& obj);
+	void Unfollow();
 };

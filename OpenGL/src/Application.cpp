@@ -238,13 +238,18 @@ int main(void)
 		GLuint bckgrnd = loadSpriteSheet("", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = loadSpriteSheet("", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
-		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f));
-		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
+		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-50.0f, -50.0f), glm::vec2(50.0f, 50.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), bckgrnd);
 		//CollidableSprite ground = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 		CollidableSprite ground[] = {
-			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f))
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f, 2.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 3.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 4.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f)
 		};
-		
+		//CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint & tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
+
 
 		ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, false);
@@ -260,14 +265,21 @@ int main(void)
 		Timer spriteTimer = Timer(0.25f);
 		spriteTimer.Start();
 		bool movePlayer = false;
+
+		double lastTime = glfwGetTime();
+		double deltaT = 0, nowTime = 0;
 		
 		while (!glfwWindowShouldClose(window))
 		{
+			nowTime = glfwGetTime();
+			deltaT = (nowTime - lastTime);
+			lastTime = nowTime;
+
 			glClearColor(0.3f, 0.7f, 0.95f, 1.0f);
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			ImGui_ImplGlfwGL3_NewFrame();
 
-			float deltaTime = (1.0f / 144.0f) * timeConstant;
+			float deltaTime = (float)deltaT * timeConstant;
 
 			if (wPressed) {
 				camera.MoveForward();
@@ -276,26 +288,27 @@ int main(void)
 				camera.MoveBackward();
 			}
 			if (aPressed) {
-				camera.StrafeLeft();
+				camera.StrafeLeft(player);
 			}
 			if (dPressed) {
-				camera.StrafeRight();
+				camera.StrafeRight(player);
 			}
 			if (spacePressed) {
-				if (canJump) {
-					player.Jump(glm::vec3(0.0f, 10.0f, 0.0f));
+				//if (canJump) {
+					player.ApplyLinearVelocity(glm::vec3(0.0f, 0.1f, 0.0f));
 					jumpTimer.Start();
 					canJump = false;
-				}
+				//}
 			}
-			if (controlPressed) {
+			/*if (controlPressed) {
 				camera.MoveDown();
-			}
+			}*/
 
 			if (!tPressed) {
 				camera.Follow(player);
 			}
 			else {
+				camera.Unfollow();
 				movePlayer = true;
 			}
 
@@ -317,18 +330,22 @@ int main(void)
 				spriteTimer.Start();
 			}
 			///////////////////////////////////////////////////////////////////////////
-			jumpTimer.ElapseTime(deltaTime);
+			/*jumpTimer.ElapseTime(deltaTime);
 			if (jumpTimer.HasFinished()) {
 				canJump = true;
 				jumpTimer.Reset(1.0f);
+			}*/
+			///////////////////////////////////////////////////////////////////////////
+			for (unsigned int i = 0; i < 5; i++) {
+				ground[i].Draw(viewMatrix, projectionMatrix);
 			}
 			///////////////////////////////////////////////////////////////////////////
 			player.Draw(viewMatrix, projectionMatrix);
 			if (movePlayer) {
-				player.UpdateCollision(deltaTime, ground, 1);
+				if (player.UpdateCollision(deltaTime, ground, 5)) {
+					canJump = true;
+				}
 			}
-			///////////////////////////////////////////////////////////////////////////
-			ground[0].Draw(viewMatrix, projectionMatrix);
 			///////////////////////////////////////////////////////////////////////////
 
 			{

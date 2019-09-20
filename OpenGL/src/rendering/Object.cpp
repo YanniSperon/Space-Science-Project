@@ -260,19 +260,6 @@ void Object::PlayFrame(GLuint nextFrame)
 	texID = nextFrame;
 }
 
-
-
-//void Object::ChangeShape(ShapeData newShape)
-//{
-//	mesh.SetShape(newShape);
-//	Bind();
-//	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-//	glBufferData(GL_ARRAY_BUFFER, mesh.GetShape().vertexBufferSize(), mesh.GetShape().vertices, GL_STATIC_DRAW);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.GetShape().indexBufferSize(), mesh.GetShape().indices, GL_STATIC_DRAW);
-//	numIndices = (GLsizei)mesh.GetShape().numIndices;
-//}
-
 void Object::SetUniformMat4(const std::string& name, glm::mat4 mat)
 {
 	shader.SetUniformMat4f(name, mat);

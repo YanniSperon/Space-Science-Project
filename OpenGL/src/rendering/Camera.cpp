@@ -4,14 +4,14 @@
 #include <iostream>
 
 Camera::Camera()
-	: hasControls(false), movementSpeed(0.1f), viewDirection(0.0f, 0.0f, -1.0f), upDirection(0.0f, 1.0f, 0.0f), cameraTranslation(0.0f, 0.0f, 0.0f), oldMouseX(0.0), oldMouseY(0.0), mouseSensitivity(0.0f)
+	: hasControls(false), movementSpeed(0.1f), viewDirection(0.0f, 0.0f, -1.0f), upDirection(0.0f, 1.0f, 0.0f), cameraTranslation(0.0f, 0.0f, 0.0f), oldMouseX(0.0), oldMouseY(0.0), mouseSensitivity(0.0f), isFollowing(false)
 {
 	
 }
 
 Camera::Camera(bool canControl, float movementSpeed, glm::vec3 startingLookDirection, glm::vec3 startingUpDirection, glm::vec3 startingCameraTranslation, float mouseSensitivity)
 	: hasControls(canControl), movementSpeed(movementSpeed), viewDirection(startingLookDirection), upDirection(startingUpDirection), 
-	cameraTranslation(startingCameraTranslation), oldMouseX(0.0), oldMouseY(0.0), mouseSensitivity(mouseSensitivity)
+	cameraTranslation(startingCameraTranslation), oldMouseX(0.0), oldMouseY(0.0), mouseSensitivity(mouseSensitivity), isFollowing(false)
 {
 
 }
@@ -63,11 +63,6 @@ void Camera::LookAt(double xpos, double ypos)
 
 void Camera::MoveForward()
 {
-	/*if (hasControls) {
-		cameraTranslation.x += movementSpeed * viewDirection.x;
-		cameraTranslation.z += movementSpeed * viewDirection.z;
-	}*/
-
 	if (hasControls) {
 		if (cameraTranslation.z > 1.75f) {
 			cameraTranslation.z += -movementSpeed;
@@ -77,11 +72,6 @@ void Camera::MoveForward()
 
 void Camera::MoveBackward()
 {
-	/*if (hasControls) {
-		cameraTranslation.x += -movementSpeed * viewDirection.x;
-		cameraTranslation.z += -movementSpeed * viewDirection.z;
-	}*/
-
 	if (hasControls) {
 		if (cameraTranslation.z < 10.0f) {
 			cameraTranslation.z += movementSpeed;
@@ -89,38 +79,32 @@ void Camera::MoveBackward()
 	}
 }
 
-void Camera::StrafeLeft()
+void Camera::StrafeLeft(Object& obj)
 {
-	/*if (hasControls) {
-		glm::vec3 strafeDirection = glm::cross(viewDirection, upDirection);
-		cameraTranslation.x += -movementSpeed * strafeDirection.x;
-		cameraTranslation.z += -movementSpeed * strafeDirection.z;
-	}*/
-
 	if (hasControls) {
-		cameraTranslation.x += -movementSpeed;
+		if (!isFollowing) {
+			cameraTranslation.x += -movementSpeed;
+		}
+		else {
+			obj.TranslateSubtract3f(movementSpeed, 0.0f, 0.0f);
+		}
 	}
 }
 
-void Camera::StrafeRight()
+void Camera::StrafeRight(Object& obj)
 {
-	/*if (hasControls) {
-		glm::vec3 strafeDirection = glm::cross(viewDirection, upDirection);
-		cameraTranslation.x += movementSpeed * strafeDirection.x;
-		cameraTranslation.z += movementSpeed * strafeDirection.z;
-	}*/
-
 	if (hasControls) {
-		cameraTranslation.x += movementSpeed;
+		if (!isFollowing) {
+			cameraTranslation.x += movementSpeed;
+		}
+		else {
+			obj.TranslateAdd3f(movementSpeed, 0.0f, 0.0f);
+		}
 	}
 }
 
 void Camera::MoveUp()
 {
-	/*if (hasControls) {
-		cameraTranslation += movementSpeed * upDirection;
-	}*/
-
 	if (hasControls) {
 		cameraTranslation.y += movementSpeed;
 	}
@@ -128,10 +112,6 @@ void Camera::MoveUp()
 
 void Camera::MoveDown()
 {
-	/*if (hasControls) {
-		cameraTranslation += -movementSpeed * upDirection;
-	}*/
-
 	if (hasControls) {
 		cameraTranslation.y += -movementSpeed;
 	}
@@ -153,4 +133,10 @@ void Camera::Follow(Object& obj)
 	glm::vec3 objPosition = obj.GetTranslation();
 	cameraTranslation.x = objPosition.x;
 	cameraTranslation.y = objPosition.y;
+	isFollowing = true;
+}
+
+void Camera::Unfollow()
+{
+	isFollowing = false;
 }

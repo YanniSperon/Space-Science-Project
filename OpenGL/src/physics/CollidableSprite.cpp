@@ -6,8 +6,8 @@ CollidableSprite::CollidableSprite()
 
 }
 
-CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity)
-	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z)
+CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
+	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z)
 {
 
 }
@@ -16,7 +16,7 @@ CollidableSprite::~CollidableSprite()
 {
 }
 
-IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite& other) const
+IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite& other)
 {
 	////////////////////////////////////////////////////////////////////////////////
 	glm::vec3 minExtents = GetMinExtents();
@@ -25,17 +25,26 @@ IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite
 	glm::vec3 otherMinExtents = other.GetMinExtents();
 	glm::vec3 otherMaxExtents = other.GetMaxExtents();
 	////////////////////////////////////////////////////////////////////////////////
+	glm::vec3 distance = minExtents - otherMinExtents;
+	////////////////////////////////////////////////////////////////////////////////
 	if (minExtents.x < otherMaxExtents.x &&
 		maxExtents.x > otherMinExtents.x &&
 		minExtents.y < otherMaxExtents.y &&
 		maxExtents.y > otherMinExtents.y)
 	{
+		glm::vec3 currentPos = GetTranslation();
+		if (distance.x > distance.y) {
+			Translate3f(otherMaxExtents.x - 0.5f, currentPos.y, currentPos.z);
+		}
+		else {
+			Translate3f(currentPos.x, otherMaxExtents.y + 0.5f, currentPos.z);
+		}
 		return IntersectData(true, 1.0f);
 	}
 	return IntersectData(false, 1.0f);
 }
 
-void CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsigned int size)
+bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsigned int size)
 {
 	Update(deltaT);
 	bool anyCollision = false;
@@ -47,7 +56,9 @@ void CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsig
 	if (anyCollision) {
 		ReverseLastUpdate(deltaT);
 		Stop();
+		return true;
 	}
+	return false;
 }
 
 inline const glm::vec3 CollidableSprite::Max(const glm::vec3 first, const glm::vec3 second) const

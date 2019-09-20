@@ -24,7 +24,5 @@ public:
 	void Unbind();
 	unsigned int GetNumIndices();
 	void PlayFrame(GLuint nextFrame);
-	void PlaySprite(GLuint frames[4]);
-	///*void ChangeShape(ShapeData newShape);*/
 	void SetUniformMat4(const std::string& name, glm::mat4 mat);
 };
