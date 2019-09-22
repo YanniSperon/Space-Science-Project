@@ -122,6 +122,12 @@ void Camera::ChangeMovementSpeed(float newSpeed)
 	movementSpeed = newSpeed;
 }
 
+void Camera::StickToView(Object& obj)
+{
+	glm::vec3 originalPosition = obj.GetTranslation();
+	obj.Translate3f(originalPosition.x, originalPosition.y, cameraTranslation.z + 0.11f);
+}
+
 void Camera::BringWith(Object& obj)
 {
 	glm::vec3 originalPosition = obj.GetTranslation();

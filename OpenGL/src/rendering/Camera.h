@@ -31,6 +31,7 @@ public:
 	void MoveDown();
 	void ChangeMovementSpeed(float newSpeed);
 
+	void StickToView(Object& obj);
 	void BringWith(Object& obj);
 	void Follow(Object& obj);
 	void Unfollow();

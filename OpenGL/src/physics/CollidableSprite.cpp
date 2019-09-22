@@ -38,9 +38,11 @@ IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite
 		if (absDist.x > absDist.y) {
 			if (distance.x > 0) {
 				Translate3f(other.GetTranslation().y + (other.GetSize().y), currentPos.y, currentPos.z);
+				ApplyLinearVelocity(glm::vec3(1.0f, 0.0f, 0.0f));
 			}
 			else {
 				Translate3f(other.GetTranslation().y - (other.GetSize().y), currentPos.y, currentPos.z);
+				ApplyLinearVelocity(glm::vec3(-1.0f, 0.0f, 0.0f));
 			}
 			StopX();
 		}
