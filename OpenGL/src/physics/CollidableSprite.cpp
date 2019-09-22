@@ -1,4 +1,5 @@
 #include "CollidableSprite.h"
+#include <iostream>
 
 CollidableSprite::CollidableSprite()
 	: SpritePhysicsBody(), minExtent(0.0f, 0.0f, 0.0f), maxExtent(0.0f, 0.0f, 0.0f)
@@ -33,15 +34,29 @@ IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite
 		maxExtents.y > otherMinExtents.y)
 	{
 		glm::vec3 currentPos = GetTranslation();
-		if (distance.x > distance.y) {
-			Translate3f(otherMaxExtents.x - 0.5f, currentPos.y, currentPos.z);
+		glm::vec3 absDist = glm::vec3(fabsf(distance.x), fabsf(distance.y), fabsf(distance.z));
+		if (absDist.x > absDist.y) {
+			if (distance.x > 0) {
+				Translate3f(other.GetTranslation().y + (other.GetSize().y), currentPos.y, currentPos.z);
+			}
+			else {
+				Translate3f(other.GetTranslation().y - (other.GetSize().y), currentPos.y, currentPos.z);
+			}
+			StopX();
 		}
 		else {
-			Translate3f(currentPos.x, otherMaxExtents.y + 0.5f, currentPos.z);
+			if (distance.y > 0) {
+				Translate3f(currentPos.x, other.GetTranslation().y + (other.GetSize().y), currentPos.z);
+			}
+			else {
+				Translate3f(currentPos.x, other.GetTranslation().y - (other.GetSize().y), currentPos.z);
+			}
+			StopY();
+			canJump = true;
 		}
-		return IntersectData(true, 1.0f);
+		return IntersectData(true, 0.0f);
 	}
-	return IntersectData(false, 1.0f);
+	return IntersectData(false, 0.0f);
 }
 
 bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsigned int size)
@@ -55,10 +70,19 @@ bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsig
 	}
 	if (anyCollision) {
 		ReverseLastUpdate(deltaT);
-		Stop();
 		return true;
 	}
 	return false;
+}
+
+bool CollidableSprite::GetCanJump()
+{
+	return canJump;
+}
+
+void CollidableSprite::SetCanJump(bool newValue)
+{
+	canJump = newValue;
 }
 
 inline const glm::vec3 CollidableSprite::Max(const glm::vec3 first, const glm::vec3 second) const

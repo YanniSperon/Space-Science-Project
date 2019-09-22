@@ -18,6 +18,7 @@ private:
 	ShapeData shape;
 	glm::vec3 minExtents;
 	glm::vec3 maxExtents;
+	glm::vec3 size;
 public:
 	Mesh();
 	Mesh(type type, std::string dir, std::string name);
@@ -39,6 +40,7 @@ public:
 	void TranslateSubtractVec3(glm::vec3 trans);
 	glm::vec3 GetTranslation() const;
 	glm::vec3 GetRotation();
+	glm::vec3 GetSize() const;
 	ShapeData GetShape();
 	void SetShape(ShapeData newShape);
 };

@@ -29,9 +29,29 @@ void SpritePhysicsBody::ReverseLastUpdate(float delta)
 	TranslateSubtractVec3(linearVelocity * delta);
 }
 
+void SpritePhysicsBody::ReverseLastVelocityUpdate(float delta)
+{
+	linearVelocity -= gravitationalAcceleration * delta;
+}
+
 void SpritePhysicsBody::Stop()
 {
 	linearVelocity = angularVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+void SpritePhysicsBody::StopX()
+{
+	linearVelocity.x = 0.0f;
+}
+
+void SpritePhysicsBody::StopY()
+{
+	linearVelocity.y = 0.0f;
+}
+
+void SpritePhysicsBody::StopZ()
+{
+	linearVelocity.z = 0.0f;
 }
 
 glm::vec3 SpritePhysicsBody::GetLinearAcceleration()
@@ -87,4 +107,9 @@ void SpritePhysicsBody::ApplyLinearAcceleration(glm::vec3 acceleration)
 void SpritePhysicsBody::ApplyAngularAcceleration(glm::vec3 acceleration)
 {
 	torque += acceleration / momentOfInertia;
+}
+
+void SpritePhysicsBody::SetLinearVelocity(glm::vec3 velocity)
+{
+	linearVelocity = velocity;
 }

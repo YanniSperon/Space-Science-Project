@@ -259,9 +259,7 @@ int main(void)
 		glfwSetCursorPos(window, 0.0, 0.0);
 
 		float timeConstant = 1.0f;
-		bool canJump = true;
 		
-		Timer jumpTimer = Timer(1.0f);
 		Timer spriteTimer = Timer(0.25f);
 		spriteTimer.Start();
 		bool movePlayer = false;
@@ -294,15 +292,11 @@ int main(void)
 				camera.StrafeRight(player);
 			}
 			if (spacePressed) {
-				//if (canJump) {
-					player.ApplyLinearVelocity(glm::vec3(0.0f, 0.1f, 0.0f));
-					jumpTimer.Start();
-					canJump = false;
-				//}
+				if (player.GetCanJump()) {
+					player.SetCanJump(false);
+					player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
+				}
 			}
-			/*if (controlPressed) {
-				camera.MoveDown();
-			}*/
 
 			if (!tPressed) {
 				camera.Follow(player);
@@ -330,21 +324,13 @@ int main(void)
 				spriteTimer.Start();
 			}
 			///////////////////////////////////////////////////////////////////////////
-			/*jumpTimer.ElapseTime(deltaTime);
-			if (jumpTimer.HasFinished()) {
-				canJump = true;
-				jumpTimer.Reset(1.0f);
-			}*/
-			///////////////////////////////////////////////////////////////////////////
 			for (unsigned int i = 0; i < 5; i++) {
 				ground[i].Draw(viewMatrix, projectionMatrix);
 			}
 			///////////////////////////////////////////////////////////////////////////
 			player.Draw(viewMatrix, projectionMatrix);
 			if (movePlayer) {
-				if (player.UpdateCollision(deltaTime, ground, 5)) {
-					canJump = true;
-				}
+				player.UpdateCollision(deltaTime, ground, 5);
 			}
 			///////////////////////////////////////////////////////////////////////////
 

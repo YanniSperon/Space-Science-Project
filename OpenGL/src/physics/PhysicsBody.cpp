@@ -20,10 +20,6 @@ PhysicsBody::PhysicsBody(type type, std::string dir, std::string name, glm::vec3
 
 void PhysicsBody::Update(float delta)
 {
-	glm::vec3 translation = GetTranslation();
-	if (translation.y < -5.0f) {
-		TranslateVec3(glm::vec3(translation.x, 20.0f, translation.y));
-	}
 	linearVelocity += gravitationalAcceleration * delta;
 	TranslateAddVec3(linearVelocity * delta);
 }

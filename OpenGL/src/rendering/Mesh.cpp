@@ -5,13 +5,13 @@
 #include <iostream>
 
 Mesh::Mesh()
-	: directory(""), fileName("Error"), rotation(0.0f, 0.0f, 0.0f), translation(0.0f, 0.0f, 0.0f), shape(), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f)
+	: directory(""), fileName("Error"), rotation(0.0f, 0.0f, 0.0f), translation(0.0f, 0.0f, 0.0f), shape(), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f), size(maxExtents - minExtents)
 {
 
 }
 
 Mesh::Mesh(type type, std::string dir, std::string name)
-	: directory(directory), fileName(fileName), rotation(0.0f, 0.0f, 0.0f), translation(0.0f, 0.0f, 0.0f), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f)
+	: directory(directory), fileName(fileName), rotation(0.0f, 0.0f, 0.0f), translation(0.0f, 0.0f, 0.0f), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f), size(maxExtents - minExtents)
 {
 	if (type == type::cubeModel) {
 		shape = ShapeGenerator::makeCube(minExtents, maxExtents);
@@ -31,7 +31,7 @@ Mesh::Mesh(type type, std::string dir, std::string name)
 }
 
 Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans)
-	: directory(directory), fileName(fileName), rotation(rot), translation(trans), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f)
+	: directory(directory), fileName(fileName), rotation(rot), translation(trans), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f), size(maxExtents - minExtents)
 {
 	if (type == type::cubeModel) {
 		shape = ShapeGenerator::makeCube(minExtents, maxExtents);
@@ -51,7 +51,7 @@ Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec
 }
 
 Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans, const std::string& texDir, const std::string& texName)
-	: directory(directory), fileName(fileName), rotation(rot), translation(trans)
+	: directory(directory), fileName(fileName), rotation(rot), translation(trans), minExtents(0.0f, 0.0f, 0.0f), maxExtents(0.0f, 0.0f, 0.0f), size(maxExtents - minExtents)
 {
 	if (type == type::cubeModel) {
 		shape = ShapeGenerator::makeCube(minExtents, maxExtents);
@@ -70,18 +70,18 @@ Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec
 	}
 }
 
-Mesh::Mesh(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord)
-	: directory(""), fileName(""), rotation(rot), translation(trans)
+Mesh::Mesh(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtent, glm::vec2 maxExtent, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord)
+	: directory(""), fileName(""), rotation(rot), translation(trans), minExtents(minExtent, z), maxExtents(maxExtent, z), size(maxExtents - minExtents)
 {
 	// Only supports primitives
 	if (type == type::cubeModel) {
-		shape = ShapeGenerator::makeCube(glm::vec3(minExtents.x, minExtents.y, z), glm::vec3(maxExtents.x, maxExtents.y, z));
+		shape = ShapeGenerator::makeCube(glm::vec3(minExtent.x, minExtent.y, z), glm::vec3(maxExtent.x, maxExtent.y, z));
 	}
 	else if (type == type::rectangle) {
-		shape = ShapeGenerator::loadRectangle(minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord);
+		shape = ShapeGenerator::loadRectangle(minExtent, maxExtent, z, bottomLeftTexCoord, topRightTexCoord);
 	}
 	else {
-		shape = ShapeGenerator::makeTriangle(glm::vec3(minExtents.x, minExtents.y, z), glm::vec3(maxExtents.x, maxExtents.y, z));
+		shape = ShapeGenerator::makeTriangle(glm::vec3(minExtent.x, minExtent.y, z), glm::vec3(maxExtent.x, maxExtent.y, z));
 	}
 }
 
@@ -161,6 +161,11 @@ glm::vec3 Mesh::GetTranslation() const
 glm::vec3 Mesh::GetRotation()
 {
 	return rotation;
+}
+
+glm::vec3 Mesh::GetSize() const
+{
+	return size;
 }
 
 ShapeData Mesh::GetShape()

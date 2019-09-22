@@ -19,8 +19,12 @@ public:
 
 	void Update(float delta);
 	void ReverseLastUpdate(float delta);
+	void ReverseLastVelocityUpdate(float delta);
 
 	void Stop();
+	void StopX();
+	void StopY();
+	void StopZ();
 
 	glm::vec3 GetLinearAcceleration();
 	glm::vec3 GetLinearAccelerationWithoutGravity();
@@ -38,6 +42,8 @@ public:
 
 	void ApplyLinearAcceleration(glm::vec3 acceleration);
 	void ApplyAngularAcceleration(glm::vec3 acceleration);
+
+	void SetLinearVelocity(glm::vec3 velocity);
 
 	inline const glm::vec3& GetVelocity() const { return linearVelocity; }
 };
