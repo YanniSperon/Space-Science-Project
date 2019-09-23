@@ -77,6 +77,14 @@
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\Intermediates\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)bin\Intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(SolutionDir)bin\Intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -95,7 +103,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW x64\lib\Release\x64;$(SolutionDir)Dependencies\GLFW x64\lib-vc2019</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,10 +136,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW x64\lib\Release\x64;$(SolutionDir)Dependencies\GLFW x64\lib-vc2019</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -133,6 +153,7 @@
     <ClCompile Include="src\physics\CollidableSprite.cpp" />
     <ClCompile Include="src\physics\IntersectData.cpp" />
     <ClCompile Include="src\physics\SpritePhysicsBody.cpp" />
+    <ClCompile Include="src\rendering\Letter.cpp" />
     <ClCompile Include="src\rendering\Object.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\rendering\Camera.cpp" />
@@ -273,6 +294,7 @@
     <ClInclude Include="src\physics\CollidableSprite.h" />
     <ClInclude Include="src\physics\IntersectData.h" />
     <ClInclude Include="src\physics\SpritePhysicsBody.h" />
+    <ClInclude Include="src\rendering\Letter.h" />
     <ClInclude Include="src\rendering\Object.h" />
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\rendering\Camera.h" />

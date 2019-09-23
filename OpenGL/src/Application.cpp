@@ -19,6 +19,7 @@
 #include "SpritePhysicsBody.h"
 #include "Timer.h"
 #include "CollidableSprite.h"
+#include "Letter.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -230,18 +231,18 @@ int main(void)
 
 
 		GLuint frames[4] = { 
-			loadSpriteSheet("", "frame1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("", "frame2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("", "frame3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
+			loadSpriteSheet("res/images/", "frame1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "frame2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "frame3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
-		GLuint bckgrnd = loadSpriteSheet("", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint sphereCow = loadSpriteSheet("", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint a = loadSpriteSheet("", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint bckgrnd = loadSpriteSheet("res/images/", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint sphereCow = loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint a = loadSpriteSheet("res/images/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
 		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-50.0f, -50.0f), glm::vec2(50.0f, 50.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), bckgrnd);
-		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), a);
+		Letter aLetter = Letter(1.0f, type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), a);
 		//CollidableSprite ground = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 		CollidableSprite ground[] = {
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
@@ -265,7 +266,6 @@ int main(void)
 		Timer spriteTimer = Timer(0.25f);
 		spriteTimer.Start();
 		Timer lungeTimer = Timer(2.5f);
-		bool movePlayer = false;
 
 		double lastTime = glfwGetTime();
 		double deltaT = 0, nowTime = 0;
@@ -294,11 +294,16 @@ int main(void)
 					player.ApplyLinearVelocity(glm::vec3(-movementSpeed, 0.0f, 0.0f));
 				}
 				else {
-					player.ApplyLinearVelocity(glm::vec3(movementSpeed, 0.0f, 0.0f));
+					camera.StrafeLeft(player);
 				}
 			}
 			if (dPressed) {
-				camera.StrafeRight(player);
+				if (player.GetLinearVelocity().x > 0) {
+					player.ApplyLinearVelocity(glm::vec3(movementSpeed, 0.0f, 0.0f));
+				}
+				else {
+					camera.StrafeRight(player);
+				}
 			}
 			if (spacePressed) {
 				if (player.GetCanJump()) {
@@ -327,7 +332,6 @@ int main(void)
 			}
 			else {
 				camera.Unfollow();
-				movePlayer = true;
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -358,11 +362,13 @@ int main(void)
 			}
 			///////////////////////////////////////////////////////////////////////////
 			player.Draw(viewMatrix, projectionMatrix);
-			if (movePlayer) {
-				player.UpdateCollision(deltaTime, ground, 5);
-			}
-			camera.StickToView(aLetter);
+			player.UpdateCollision(deltaTime, ground, 5);
+			///////////////////////////////////////////////////////////////////////////
+			//camera.BringLetterWith(aLetter);
 			aLetter.Draw(viewMatrix, projectionMatrix);
+			glm::vec3 cam = aLetter.GetTranslation();
+			aLetter.Translate3f(cam.x, cam.y, cam.z - aLetter.GetDistanceFromCamera());
+			std::cout << "Camera Position: (" << cam.x << ", " << cam.y << ", " << cam.z << ")\n";
 			///////////////////////////////////////////////////////////////////////////
 
 			{
