@@ -2,19 +2,19 @@
 #include <iostream>
 
 CollidableSprite::CollidableSprite()
-	: SpritePhysicsBody(), minExtent(0.0f, 0.0f, 0.0f), maxExtent(0.0f, 0.0f, 0.0f), canJump(false)
+	: SpritePhysicsBody(), minExtent(0.0f, 0.0f, 0.0f), maxExtent(0.0f, 0.0f, 0.0f), canJump(false), anyCollisionInTheLastIntersectCollidable(false)
 {
 
 }
 
 CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
-	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z), canJump(true)
+	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z), canJump(true), anyCollisionInTheLastIntersectCollidable(false)
 {
 
 }
 
 CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtents, glm::vec2 collisionMaxExtents, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
-	: SpritePhysicsBody(rot, trans, collisionMinExtents, collisionMaxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(collisionMinExtents.x, collisionMinExtents.y, z), maxExtent(collisionMaxExtents.x, collisionMaxExtents.y, z), canJump(true)
+	: SpritePhysicsBody(rot, trans, collisionMinExtents, collisionMaxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(collisionMinExtents.x, collisionMinExtents.y, z), maxExtent(collisionMaxExtents.x, collisionMaxExtents.y, z), canJump(true), anyCollisionInTheLastIntersectCollidable(false)
 {
 
 }
@@ -97,10 +97,10 @@ bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsig
 {
 	Update(deltaT);
 	bool anyCollision = false;
-	int indexWithSmallestDistance = 0;
-	float smallestDistance = INFINITY;
+	/*int indexWithSmallestDistance = 0;
+	float smallestDistance = INFINITY;*/
 	for (unsigned int i = 0; i < size; i++) {
-		glm::vec3 minExtents = GetMinExtents();
+		/*glm::vec3 minExtents = GetMinExtents();
 		glm::vec3 maxExtents = GetMaxExtents();
 
 		glm::vec3 otherMinExtents = s[i].GetMinExtents();
@@ -113,11 +113,14 @@ bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsig
 		if (distance < smallestDistance) {
 			smallestDistance = distance;
 			indexWithSmallestDistance = i;
+		}*/
+		if (IntersectCollidableSprite(s[i]).GetDoesIntersect()) {
+			anyCollision = true;
 		}
 	}
-	if (IntersectCollidableSprite(s[indexWithSmallestDistance]).GetDoesIntersect()) {
+	/*if (IntersectCollidableSprite(s[indexWithSmallestDistance]).GetDoesIntersect()) {
 		anyCollision = true;
-	}
+	}*/
 	if (anyCollision) {
 		ReverseLastUpdate(deltaT);
 		return true;
