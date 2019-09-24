@@ -188,7 +188,39 @@ Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm:
 }
 
 Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
-	: Mesh(type, rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
+	: Mesh(type, rot, trans, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
+{
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, GetShape().vertexBufferSize(), GetShape().vertices, GL_STATIC_DRAW);
+
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (char*)(sizeof(float) * 6));
+
+
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetShape().indexBufferSize(), GetShape().indices, GL_STATIC_DRAW);
+
+	numIndices = (GLsizei)GetShape().numIndices;
+
+	GetShape().cleanUp();
+
+	shader.Bind();
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	shader.Unbind();
+}
+
+
+Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
+	: Mesh(type, rot, trans, collisionMinExtent, collisionMaxExtent, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
 {
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);

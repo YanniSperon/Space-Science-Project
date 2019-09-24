@@ -70,8 +70,8 @@ Mesh::Mesh(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec
 	}
 }
 
-Mesh::Mesh(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtent, glm::vec2 maxExtent, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord)
-	: directory(""), fileName(""), rotation(rot), translation(trans), minExtents(minExtent, z), maxExtents(maxExtent, z), size(maxExtents - minExtents)
+Mesh::Mesh(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtent, glm::vec2 maxExtent, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord)
+	: directory(""), fileName(""), rotation(rot), translation(trans), minExtents(minExtent, z), maxExtents(maxExtent, z), size(glm::vec3(collisionMaxExtent, z) - glm::vec3(collisionMinExtent, z))
 {
 	// Only supports primitives
 	if (type == type::cubeModel) {

@@ -6,10 +6,6 @@ class CollidableSprite : public SpritePhysicsBody {
 private:
 	const glm::vec3 minExtent;
 	const glm::vec3 maxExtent;
-	bool alreadyCollidedLeft;
-	bool alreadyCollidedRight;
-	bool alreadyCollidedUp;
-	bool alreadyCollidedDown;
 	bool canJump;
 public:
 	CollidableSprite();
@@ -26,6 +22,4 @@ public:
 
 	inline const glm::vec3& GetMinExtents() const { return minExtent + GetTranslation(); }
 	inline const glm::vec3& GetMaxExtents() const { return maxExtent + GetTranslation(); }
-	inline const glm::vec3 Max(const glm::vec3 first, const glm::vec3 second) const;
-	inline const float MaxValue(const glm::vec3 vec) const;
 };

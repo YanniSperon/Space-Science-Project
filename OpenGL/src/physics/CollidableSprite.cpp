@@ -2,19 +2,19 @@
 #include <iostream>
 
 CollidableSprite::CollidableSprite()
-	: SpritePhysicsBody(), minExtent(0.0f, 0.0f, 0.0f), maxExtent(0.0f, 0.0f, 0.0f), canJump(false), alreadyCollidedLeft(false), alreadyCollidedRight(false), alreadyCollidedUp(false), alreadyCollidedDown(false)
+	: SpritePhysicsBody(), minExtent(0.0f, 0.0f, 0.0f), maxExtent(0.0f, 0.0f, 0.0f), canJump(false)
 {
 
 }
 
 CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
-	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z), canJump(true), alreadyCollidedLeft(false), alreadyCollidedRight(false), alreadyCollidedUp(false), alreadyCollidedDown(false)
+	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(minExtents.x, minExtents.y, z), maxExtent(maxExtents.x, maxExtents.y, z), canJump(true)
 {
 
 }
 
 CollidableSprite::CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtents, glm::vec2 collisionMaxExtents, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
-	: SpritePhysicsBody(rot, trans, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(collisionMinExtents.x, collisionMinExtents.y, z), maxExtent(collisionMaxExtents.x, collisionMaxExtents.y, z), canJump(true), alreadyCollidedLeft(false), alreadyCollidedRight(false), alreadyCollidedUp(false), alreadyCollidedDown(false)
+	: SpritePhysicsBody(rot, trans, collisionMinExtents, collisionMaxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame, m, linearVel, angularVel, f, t, MOI, gravity, COR), minExtent(collisionMinExtents.x, collisionMinExtents.y, z), maxExtent(collisionMaxExtents.x, collisionMaxExtents.y, z), canJump(true)
 {
 
 }
@@ -68,11 +68,11 @@ IntersectData CollidableSprite::IntersectCollidableSprite(const CollidableSprite
 		glm::vec3 absDist = glm::vec3(std::abs(distance.x), std::abs(distance.y), std::abs(distance.z));
 		if (absDist.x > absDist.y) {
 			if (distance.x > 0) {
-				Translate3f(other.GetTranslation().y + (other.GetSize().y), currentPos.y, currentPos.z);
+				Translate3f(other.GetTranslation().x + (other.GetSize().x), currentPos.y, currentPos.z);
 				ApplyLinearVelocity(glm::vec3(1.0f, 0.0f, 0.0f));
 			}
 			else {
-				Translate3f(other.GetTranslation().y - (other.GetSize().y), currentPos.y, currentPos.z);
+				Translate3f(other.GetTranslation().x - (other.GetSize().x), currentPos.y, currentPos.z);
 				ApplyLinearVelocity(glm::vec3(-1.0f, 0.0f, 0.0f));
 			}
 			StopX();
@@ -97,14 +97,26 @@ bool CollidableSprite::UpdateCollision(float deltaT, CollidableSprite s[], unsig
 {
 	Update(deltaT);
 	bool anyCollision = false;
-	alreadyCollidedDown = false;
-	alreadyCollidedLeft = false;
-	alreadyCollidedRight = false;
-	alreadyCollidedUp = false;
+	int indexWithSmallestDistance = 0;
+	float smallestDistance = INFINITY;
 	for (unsigned int i = 0; i < size; i++) {
-		if (IntersectCollidableSprite(s[i]).GetDoesIntersect()) {
-			anyCollision = true;
+		glm::vec3 minExtents = GetMinExtents();
+		glm::vec3 maxExtents = GetMaxExtents();
+
+		glm::vec3 otherMinExtents = s[i].GetMinExtents();
+		glm::vec3 otherMaxExtents = s[i].GetMaxExtents();
+
+		glm::vec3 changeInValues = minExtents - otherMinExtents;
+
+		float distance = (changeInValues.x * changeInValues.x) + (changeInValues.y * changeInValues.y) + (changeInValues.z * changeInValues.z);
+
+		if (distance < smallestDistance) {
+			smallestDistance = distance;
+			indexWithSmallestDistance = i;
 		}
+	}
+	if (IntersectCollidableSprite(s[indexWithSmallestDistance]).GetDoesIntersect()) {
+		anyCollision = true;
 	}
 	if (anyCollision) {
 		ReverseLastUpdate(deltaT);
