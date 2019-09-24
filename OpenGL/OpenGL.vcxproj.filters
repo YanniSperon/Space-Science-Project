@@ -84,9 +84,6 @@
     <ClCompile Include="src\physics\CollidableSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendering\Letter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -934,9 +931,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\physics\CollidableSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rendering\Letter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

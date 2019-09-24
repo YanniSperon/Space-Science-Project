@@ -2,7 +2,6 @@
 
 #include "glm/glm.hpp"
 #include "Object.h"
-#include "Letter.h"
 
 class Camera {
 public:
@@ -32,9 +31,7 @@ public:
 	void MoveDown();
 	void ChangeMovementSpeed(float newSpeed);
 
-	void StickToView(Object& obj);
 	void BringWith(Object& obj);
-	void BringLetterWith(Letter& obj);
 	void Follow(Object& obj);
 	void Unfollow();
 };

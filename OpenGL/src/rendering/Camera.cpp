@@ -128,11 +128,6 @@ void Camera::BringWith(Object& obj)
 	obj.Translate3f(cameraTranslation.x, cameraTranslation.y, originalPosition.z);
 }
 
-void Camera::BringLetterWith(Letter& obj)
-{
-	obj.Translate3f(cameraTranslation.x, cameraTranslation.y, cameraTranslation.z + obj.GetDistanceFromCamera());
-}
-
 void Camera::Follow(Object& obj)
 {
 	glm::vec3 objPosition = obj.GetTranslation();

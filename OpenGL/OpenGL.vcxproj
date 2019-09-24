@@ -153,7 +153,6 @@
     <ClCompile Include="src\physics\CollidableSprite.cpp" />
     <ClCompile Include="src\physics\IntersectData.cpp" />
     <ClCompile Include="src\physics\SpritePhysicsBody.cpp" />
-    <ClCompile Include="src\rendering\Letter.cpp" />
     <ClCompile Include="src\rendering\Object.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\rendering\Camera.cpp" />
@@ -294,7 +293,6 @@
     <ClInclude Include="src\physics\CollidableSprite.h" />
     <ClInclude Include="src\physics\IntersectData.h" />
     <ClInclude Include="src\physics\SpritePhysicsBody.h" />
-    <ClInclude Include="src\rendering\Letter.h" />
     <ClInclude Include="src\rendering\Object.h" />
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\rendering\Camera.h" />

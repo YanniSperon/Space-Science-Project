@@ -19,7 +19,6 @@
 #include "SpritePhysicsBody.h"
 #include "Timer.h"
 #include "CollidableSprite.h"
-#include "Letter.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -34,7 +33,7 @@
 
 // https://www.youtube.com/watch?v=fUO9tk6IarY&list=PLEETnX-uPtBXm1KEr_2zQ6K_0hoGH6JJ0&index=7 - 00:31
 
-Config config = Config("", "config.txt");
+Config config = Config("res/other/", "config.txt");
 
 static bool fullscreen = config.getFullscreenPreference();
 static float mouseSensitivity = config.getMouseSensitivityPreference();
@@ -231,22 +230,26 @@ int main(void)
 
 
 		GLuint frames[4] = { 
-			loadSpriteSheet("res/images/", "frame1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			/*loadSpriteSheet("res/images/", "frame1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
 			loadSpriteSheet("res/images/", "frame2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
 			loadSpriteSheet("res/images/", "frame3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
+			loadSpriteSheet("res/images/", "frame4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)*/
+			loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
 		GLuint bckgrnd = loadSpriteSheet("res/images/", "backgroundrgba1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint a = loadSpriteSheet("res/images/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint letters = loadSpriteSheet("res/images/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
-		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-50.0f, -50.0f), glm::vec2(50.0f, 50.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), bckgrnd);
-		Letter aLetter = Letter(1.0f, type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), a);
+		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
 		//CollidableSprite ground = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-2.5f, -2.5f), glm::vec2(2.5f, -2.0f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 		CollidableSprite ground[] = {
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
-			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f)
@@ -270,6 +273,7 @@ int main(void)
 		double lastTime = glfwGetTime();
 		double deltaT = 0, nowTime = 0;
 		bool lungeReady = true;
+		bool movementPaused = false;
 		
 		while (!glfwWindowShouldClose(window))
 		{
@@ -283,55 +287,64 @@ int main(void)
 
 			float deltaTime = (float)deltaT * timeConstant;
 
-			if (wPressed) {
-				camera.MoveForward();
-			}
-			if (sPressed) {
-				camera.MoveBackward();
-			}
-			if (aPressed) {
-				if (player.GetLinearVelocity().x > 0) {
-					player.ApplyLinearVelocity(glm::vec3(-movementSpeed, 0.0f, 0.0f));
+			if (!movementPaused) {
+				if (wPressed) {
+					camera.MoveForward();
 				}
-				else {
-					camera.StrafeLeft(player);
+				if (sPressed) {
+					camera.MoveBackward();
 				}
-			}
-			if (dPressed) {
-				if (player.GetLinearVelocity().x > 0) {
-					player.ApplyLinearVelocity(glm::vec3(movementSpeed, 0.0f, 0.0f));
-				}
-				else {
-					camera.StrafeRight(player);
-				}
-			}
-			if (spacePressed) {
-				if (player.GetCanJump()) {
-					player.SetCanJump(false);
-					player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
-				}
-			}
-			if (lungeReady) {
-				if (shiftPressed) {
-					if (aPressed) {
-						player.ApplyLinearVelocity(glm::vec3(-5.0f, 0.0f, 0.0f));
-					}
-					else if (dPressed) {
-						player.ApplyLinearVelocity(glm::vec3(5.0f, 0.0f, 0.0f));
+				if (aPressed) {
+					if (player.GetLinearVelocity().x > 0) {
+						player.ApplyLinearVelocity(glm::vec3(-movementSpeed, 0.0f, 0.0f));
 					}
 					else {
-						player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
+						camera.StrafeLeft(player);
 					}
-					lungeTimer.Start();
-					lungeReady = false;
+				}
+				if (dPressed) {
+					if (player.GetLinearVelocity().x > 0) {
+						player.ApplyLinearVelocity(glm::vec3(movementSpeed, 0.0f, 0.0f));
+					}
+					else {
+						camera.StrafeRight(player);
+					}
+				}
+				if (spacePressed) {
+					if (player.GetCanJump()) {
+						//player.SetCanJump(false);
+						//player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
+						player.TranslateAdd3f(0.0f, movementSpeed, 0.0f);
+					}
+				}
+				if (controlPressed) {
+					player.TranslateAdd3f(0.0f, -movementSpeed, 0.0f);
+				}
+				if (lungeReady) {
+					if (shiftPressed) {
+						if (aPressed) {
+							player.ApplyLinearVelocity(glm::vec3(-5.0f, 0.0f, 0.0f));
+						}
+						else if (dPressed) {
+							player.ApplyLinearVelocity(glm::vec3(5.0f, 0.0f, 0.0f));
+						}
+						else {
+							player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
+						}
+						lungeTimer.Start();
+						lungeReady = false;
+					}
 				}
 			}
-
 			if (!tPressed) {
 				camera.Follow(player);
 			}
 			else {
-				camera.Unfollow();
+				camera.Follow(player);
+				printf("---------------------------------------------------------------------------------------------------------------------------\n");
+				printf("                                    !T PRESSED!\n");
+				printf("---------------------------------------------------------------------------------------------------------------------------\n");
+				//camera.Unfollow();
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -364,11 +377,7 @@ int main(void)
 			player.Draw(viewMatrix, projectionMatrix);
 			player.UpdateCollision(deltaTime, ground, 5);
 			///////////////////////////////////////////////////////////////////////////
-			//camera.BringLetterWith(aLetter);
 			aLetter.Draw(viewMatrix, projectionMatrix);
-			glm::vec3 cam = aLetter.GetTranslation();
-			aLetter.Translate3f(cam.x, cam.y, cam.z - aLetter.GetDistanceFromCamera());
-			std::cout << "Camera Position: (" << cam.x << ", " << cam.y << ", " << cam.z << ")\n";
 			///////////////////////////////////////////////////////////////////////////
 
 			{

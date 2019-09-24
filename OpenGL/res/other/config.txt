@@ -1,5 +1,5 @@
 fullscreen=false
-initialWidth=1920
-initialHeight=1080
+initialWidth=480
+initialHeight=360
 mouseSensitivity=0.005f
 FOV=90.0f
