@@ -32,8 +32,6 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
-// https://www.youtube.com/watch?v=fUO9tk6IarY&list=PLEETnX-uPtBXm1KEr_2zQ6K_0hoGH6JJ0&index=7 - 00:31
-
 Config config = Config("res/other/", "config.txt");
 
 static bool fullscreen = config.getFullscreenPreference();
@@ -52,6 +50,9 @@ static bool tPressed = false;
 static int oldMouseX = 0;
 static int oldMouseY = 0;
 static float movementSpeed = 0.05f;
+
+float cursorXPos = 0.0;
+float cursorYPos = 0.0;
 
 Camera camera = Camera(true, movementSpeed, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 5.0f), mouseSensitivity);
 
@@ -136,22 +137,25 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 		tPressed = false;
 	}
 }
-//static void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	if (ypos * mouseSensitivity > 1.5708) {
-//		double newMouseY = 1.57 / mouseSensitivity;
-//		glfwSetCursorPos(window, xpos, newMouseY);
-//		camera.LookAt(xpos, newMouseY);
-//	}
-//	else if (ypos * mouseSensitivity < -1.5708) {
-//		double newMouseY = -1.57 / mouseSensitivity;
-//		glfwSetCursorPos(window, xpos, newMouseY);
-//		camera.LookAt(xpos, newMouseY);
-//	}
-//	else {
-//		camera.LookAt(xpos, ypos);
-//	}
-//}
+static void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	cursorXPos = xpos * mouseSensitivity;
+	cursorYPos = -ypos * mouseSensitivity;
+	/*if (ypos * mouseSensitivity > 1.5708) {
+		double newMouseY = 1.57 / mouseSensitivity;
+		glfwSetCursorPos(window, xpos, newMouseY);
+		camera.LookAt(xpos, newMouseY);
+	}
+	else if (ypos * mouseSensitivity < -1.5708) {
+		double newMouseY = -1.57 / mouseSensitivity;
+		glfwSetCursorPos(window, xpos, newMouseY);
+		camera.LookAt(xpos, newMouseY);
+	}
+	else {
+		camera.LookAt(xpos, ypos);
+	}*/
+
+}
 static void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	currentWidth = width;
@@ -222,6 +226,7 @@ int main(void)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwSetKeyCallback(window, keyCallback);
+		glfwSetCursorPosCallback(window, cursorPositionCallback);
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
 		glEnable(GL_BLEND);
@@ -239,10 +244,12 @@ int main(void)
 		GLuint bckgrnd = loadSpriteSheet("res/images/", "nebula.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint letters = loadSpriteSheet("res/images/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint crsr = loadSpriteSheet("res/images/", "cursor.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 
 		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-50.0f, -25.0f), glm::vec2(50.0f, 25.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), bckgrnd);
 		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
+		Object cursor = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), crsr);
 		CollidableSprite ground[] = {
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 			CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
@@ -291,7 +298,7 @@ int main(void)
 		double lastTime = glfwGetTime();
 		double deltaT = 0, nowTime = 0;
 		bool lungeReady = true;
-		bool movementPaused = false;
+		bool movementEnabled = false;
 		bool gameOver = false;
 		
 		while (!glfwWindowShouldClose(window) && !gameOver)
@@ -306,13 +313,13 @@ int main(void)
 
 			float deltaTime = (float)deltaT * timeConstant;
 
-			if (!movementPaused) {
-				if (wPressed) {
+			if (movementEnabled) {
+				/*if (wPressed) {
 					camera.MoveForward();
 				}
 				if (sPressed) {
 					camera.MoveBackward();
-				}
+				}*/
 				if (aPressed) {
 					if (player.GetLinearVelocity().x > 0) {
 						player.ApplyLinearVelocity(glm::vec3(-movementSpeed, 0.0f, 0.0f));
@@ -398,6 +405,10 @@ int main(void)
 			}
 			///////////////////////////////////////////////////////////////////////////
 			renderer.submit(&aLetter);
+			///////////////////////////////////////////////////////////////////////////
+			glm::vec3 camPos = camera.GetTranslation();
+			cursor.Translate3f(cursorXPos + camPos.x, cursorYPos + camPos.y, 1.0f);
+			renderer.submit(&cursor);
 			///////////////////////////////////////////////////////////////////////////
 
 			renderer.flush(viewMatrix, projectionMatrix);
