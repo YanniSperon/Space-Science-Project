@@ -68,8 +68,8 @@ Object::Object(type type, std::string dir, std::string name)
 	shader.Unbind();
 }
 
-Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans)
-	: Mesh(type, dir, name, rot, trans), shader("res/shaders/Basic.shader"), texID(0), currentFrame(0)
+Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle)
+	: Mesh(type, dir, name, rot, trans, scle), shader("res/shaders/Basic.shader"), texID(0), currentFrame(0)
 {
 	glGenTextures(1, &texID);
 	glBindTexture(GL_TEXTURE_2D, texID);
@@ -127,8 +127,8 @@ Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm:
 	shader.Unbind();
 }
 
-Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans, const std::string& texDir, const std::string& texName)
-	: Mesh(type, dir, name, rot, trans), shader("res/shaders/Basic.shader"), currentFrame(0)
+Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, const std::string& texDir, const std::string& texName)
+	: Mesh(type, dir, name, rot, trans, scle), shader("res/shaders/Basic.shader"), currentFrame(0)
 {
 	glGenTextures(1, &texID);
 	glBindTexture(GL_TEXTURE_2D, texID);
@@ -187,8 +187,8 @@ Object::Object(type type, std::string dir, std::string name, glm::vec3 rot, glm:
 	shader.Unbind();
 }
 
-Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
-	: Mesh(type, rot, trans, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
+Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
+	: Mesh(type, rot, trans, scle, minExtents, maxExtents, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
 {
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -218,9 +218,8 @@ Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 minExtents, 
 	shader.Unbind();
 }
 
-
-Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
-	: Mesh(type, rot, trans, collisionMinExtent, collisionMaxExtent, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
+Object::Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex)
+	: Mesh(type, rot, trans, scle, collisionMinExtent, collisionMaxExtent, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord), shader("res/shaders/Basic.shader"), texID(tex), currentFrame(0)
 {
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);

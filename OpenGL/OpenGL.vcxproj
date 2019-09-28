@@ -90,7 +90,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\primitives;src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\primitives;src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\primitives;src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\primitives;src\physics;src\rendering;src;src\vendor;$(SolutionDir)Dependencies\GLFW x64\include;$(SolutionDir)Dependencies\GLEW x64\include</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -157,7 +157,6 @@
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\rendering\Camera.cpp" />
     <ClCompile Include="src\rendering\Mesh.cpp" />
-    <ClCompile Include="src\physics\PhysicsBody.cpp" />
     <ClCompile Include="src\physics\Plane.cpp" />
     <ClCompile Include="src\rendering\Player.cpp" />
     <ClCompile Include="src\primitives\ShapeGenerator.cpp" />
@@ -298,7 +297,6 @@
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\rendering\Camera.h" />
     <ClInclude Include="src\rendering\Mesh.h" />
-    <ClInclude Include="src\physics\PhysicsBody.h" />
     <ClInclude Include="src\physics\Plane.h" />
     <ClInclude Include="src\rendering\Player.h" />
     <ClInclude Include="src\primitives\ShapeGenerator.h" />

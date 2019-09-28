@@ -23,12 +23,12 @@ public:
 	glm::mat4 GetViewTransformMatrix();
 	glm::vec3 GetTranslation();
 	void LookAt(double xpos, double ypos);
-	void MoveForward();
-	void MoveBackward();
-	void StrafeLeft(Object& obj);
-	void StrafeRight(Object& obj);
-	void MoveUp();
-	void MoveDown();
+	void MoveForward(float deltaT);
+	void MoveBackward(float deltaT);
+	void StrafeLeft(Object& obj, float deltaT);
+	void StrafeRight(Object& obj, float deltaT);
+	void MoveUp(float deltaT);
+	void MoveDown(float deltaT);
 	void ChangeMovementSpeed(float newSpeed);
 
 	void BringWith(Object& obj);

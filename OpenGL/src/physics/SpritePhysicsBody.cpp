@@ -6,8 +6,8 @@ SpritePhysicsBody::SpritePhysicsBody()
 
 }
 
-SpritePhysicsBody::SpritePhysicsBody(glm::vec3 rot, glm::vec3 trans, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
-	: Sprite(rot, trans, collisionMinExtent, collisionMaxExtent, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame), mass(m), linearVelocity(linearVel), force(f), angularVelocity(angularVel), torque(t), momentOfInertia(MOI), gravitationalAcceleration(gravity), coefficientOfRestitution(COR), lastDeltaT(0.0f)
+SpritePhysicsBody::SpritePhysicsBody(glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR)
+	: Sprite(rot, trans, scle, collisionMinExtent, collisionMaxExtent, minExtents, maxExtents, z, bottomLeftTexCoord, topRightTexCoord, tex, startingFrame), mass(m), linearVelocity(linearVel), force(f), angularVelocity(angularVel), torque(t), momentOfInertia(MOI), gravitationalAcceleration(gravity), coefficientOfRestitution(COR), lastDeltaT(0.0f)
 {
 
 }
@@ -19,7 +19,7 @@ SpritePhysicsBody::~SpritePhysicsBody()
 
 void SpritePhysicsBody::Update(float delta)
 {
-	linearVelocity += gravitationalAcceleration * delta;
+	linearVelocity += ((gravitationalAcceleration * delta) + ((force / mass) * delta));
 	TranslateAddVec3(linearVelocity * delta);
 }
 
@@ -112,4 +112,29 @@ void SpritePhysicsBody::ApplyAngularAcceleration(glm::vec3 acceleration)
 void SpritePhysicsBody::SetLinearVelocity(glm::vec3 velocity)
 {
 	linearVelocity = velocity;
+}
+
+void SpritePhysicsBody::SetLinearAcceleration(glm::vec3 acceleration)
+{
+	force = acceleration / mass;
+}
+
+void SpritePhysicsBody::SetGravitationalAcceleration(glm::vec3 gravity)
+{
+	gravitationalAcceleration = gravity;
+}
+
+float SpritePhysicsBody::GetMass()
+{
+	return mass;
+}
+
+void SpritePhysicsBody::SetMass(float newMass)
+{
+	mass = newMass;
+}
+
+void SpritePhysicsBody::AddMass(float newMass)
+{
+	mass += newMass;
 }

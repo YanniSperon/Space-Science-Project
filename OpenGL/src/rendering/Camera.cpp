@@ -61,59 +61,59 @@ void Camera::LookAt(double xpos, double ypos)
 	//}
 }
 
-void Camera::MoveForward()
+void Camera::MoveForward(float deltaT)
 {
 	if (hasControls) {
 		if (cameraTranslation.z > 1.75f) {
-			cameraTranslation.z += -movementSpeed;
+			cameraTranslation.z += -(movementSpeed / 0.007777) * deltaT;
 		}
 	}
 }
 
-void Camera::MoveBackward()
+void Camera::MoveBackward(float deltaT)
 {
 	if (hasControls) {
 		if (cameraTranslation.z < 10.0f) {
-			cameraTranslation.z += movementSpeed;
+			cameraTranslation.z += (movementSpeed / 0.007777) * deltaT;
 		}
 	}
 }
 
-void Camera::StrafeLeft(Object& obj)
+void Camera::StrafeLeft(Object& obj, float deltaT)
 {
 	if (hasControls) {
 		if (!isFollowing) {
-			cameraTranslation.x += -movementSpeed;
+			cameraTranslation.x += -(movementSpeed / 0.007777) * deltaT;
 		}
 		else {
-			obj.TranslateSubtract3f(movementSpeed, 0.0f, 0.0f);
+			obj.TranslateSubtract3f((movementSpeed / 0.007777) * deltaT, 0.0f, 0.0f);
 		}
 	}
 }
 
-void Camera::StrafeRight(Object& obj)
+void Camera::StrafeRight(Object& obj, float deltaT)
 {
 	if (hasControls) {
 		if (!isFollowing) {
-			cameraTranslation.x += movementSpeed;
+			cameraTranslation.x += (movementSpeed / 0.007777) * deltaT;
 		}
 		else {
-			obj.TranslateAdd3f(movementSpeed, 0.0f, 0.0f);
+			obj.TranslateAdd3f((movementSpeed / 0.007777) * deltaT, 0.0f, 0.0f);
 		}
 	}
 }
 
-void Camera::MoveUp()
+void Camera::MoveUp(float deltaT)
 {
 	if (hasControls) {
-		cameraTranslation.y += movementSpeed;
+		cameraTranslation.y += (movementSpeed / 0.007777) * deltaT;
 	}
 }
 
-void Camera::MoveDown()
+void Camera::MoveDown(float deltaT)
 {
 	if (hasControls) {
-		cameraTranslation.y += -movementSpeed;
+		cameraTranslation.y += -(movementSpeed / 0.007777) * deltaT;
 	}
 }
 
