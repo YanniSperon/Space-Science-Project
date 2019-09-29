@@ -30,6 +30,7 @@ public:
 	void MoveUp(float deltaT);
 	void MoveDown(float deltaT);
 	void ChangeMovementSpeed(float newSpeed);
+	void Translate3f(float x, float y, float z);
 
 	void BringWith(Object& obj);
 	void Follow(Object& obj);

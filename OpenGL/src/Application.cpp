@@ -253,21 +253,21 @@ int main(void)
 
 
 		GLuint frames[4] = { 
-			loadSpriteSheet("res/images/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/", "f2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/", "f3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/", "f4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
+			loadSpriteSheet("res/images/sprites/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/sprites/", "f2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/sprites/", "f3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			loadSpriteSheet("res/images/sprites/", "f4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
 
-		GLuint bckgrnd = loadSpriteSheet("res/images/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint sphereCow = loadSpriteSheet("res/images/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint letters = loadSpriteSheet("res/images/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint spaceBckgrnd = loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint sphereCow = loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint letters = loadSpriteSheet("res/images/other/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		texCoords cursorCoords = getImageCoordinates(15, 15, 16, 16, 16, 16);
 
 		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
-		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), bckgrnd);
+		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), spaceBckgrnd);
 		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
-		Object cursor = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0]);
+		Object cursor = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0]);
 		
 		std::vector<CollidableSprite> ground;
 		for (unsigned int i = 0; i < 100; i++) {
@@ -306,8 +306,40 @@ int main(void)
 		}
 
 		texCoords ammoCoords = getImageCoordinates(0, 14, 2, 15, 16, 16);
-		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.001f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		Simple2DRenderer renderer;
+
+		texCoords satelliteCoords = getImageCoordinates(0, 11, 2, 13, 16, 16);
+		CollidableSprite satellite = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, satelliteCoords.bottomLeft, satelliteCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+
+		std::vector<CollidableSprite> incomingMeteors;
+		for (unsigned int i = 0; i < 10; i++) {
+			float rx = (float)((rand() / (float)RAND_MAX * 100) - 50);
+			float ry = (float)((rand() / (float)RAND_MAX * 50) - 25);
+			float rsx = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
+			float rsy = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
+			int randInt = (int)std::round((rand() / (double)RAND_MAX * 4));
+			glm::vec2 bottomLeftTexCoord;
+			glm::vec2 topRightTexCoord;
+
+			if (randInt == 0 || randInt == 4) {
+				bottomLeftTexCoord = meteor.bottomLeft;
+				topRightTexCoord = meteor.topRight;
+			}
+			else if (randInt == 1) {
+				bottomLeftTexCoord = meteor.topRight;
+				topRightTexCoord = meteor.bottomLeft;
+			}
+			else if (randInt == 2) {
+				bottomLeftTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
+				topRightTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
+			}
+			else if (randInt == 3) {
+				bottomLeftTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
+				topRightTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
+			}
+			food.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(rx, ry, 0.0f), glm::vec3(rsx, rsy, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, bottomLeftTexCoord, topRightTexCoord, frames[0], 2, rsx* rsy, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+		}
 
 		glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
 		glfwSetCursorPos(window, 0.0, 0.0);
@@ -338,6 +370,13 @@ int main(void)
 		bool shootingEnabled = false;
 		unsigned int actNumber = 0;
 		movementSpeed = 0.01f;
+		movementEnabled = true;
+		flyEnabled = true;
+		lungeEnabled = false;
+		cursorEnabled = false;
+		shootingEnabled = false;
+		scoreMultiplier = 5.0f;
+		player.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
 		// mine is 0,1,2, mark is 3,4, and chris is 5
 
 		ImGui::CreateContext();
@@ -350,7 +389,7 @@ int main(void)
 			deltaT = (nowTime - lastTime);
 			lastTime = nowTime;
 
-			glClearColor(0.0f, 0.114f, 0.231f, 1.0f);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			ImGui_ImplGlfwGL3_NewFrame();
 
@@ -358,13 +397,6 @@ int main(void)
 			
 			// Yanni first act
 			if (actNumber == 0) {
-				movementEnabled = true;
-				flyEnabled = true;
-				lungeEnabled = false;
-				cursorEnabled = false;
-				shootingEnabled = false;
-				scoreMultiplier = 5.0f;
-				player.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
 				///////////////////////////////////////////////////////////////////////////
 				if (movementEnabled) {
 					if (zoomEnabled) {
@@ -407,23 +439,6 @@ int main(void)
 							player.TranslateAdd3f(0.0f, -(movementSpeed/0.007777) * deltaTime, 0.0f);
 						}
 					}
-					if (lungeEnabled) {
-						if (lungeReady) {
-							if (shiftPressed) {
-								if (aPressed) {
-									player.ApplyLinearVelocity(glm::vec3(-5.0f, 0.0f, 0.0f));
-								}
-								else if (dPressed) {
-									player.ApplyLinearVelocity(glm::vec3(5.0f, 0.0f, 0.0f));
-								}
-								else {
-									player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
-								}
-								lungeTimer.Start();
-								lungeReady = false;
-							}
-						}
-					}
 				}
 				if (shootingEnabled) {
 					if (tPressed) {
@@ -451,40 +466,6 @@ int main(void)
 				}
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submitForceRender(&background);
-				///////////////////////////////////////////////////////////////////////////
-				if (shootingEnabled) {
-					if (shot) {
-						if (!midair) {
-							glm::vec3 playerPos = player.GetTranslation();
-							glm::vec3 cursorPos = cursor.GetTranslation();
-							glm::vec2 changeInValues = glm::vec2(cursorPos.x - playerPos.x, cursorPos.y - playerPos.y);
-							float degrees = 0.0f;
-							if (changeInValues.x == 0) {
-								degrees = 90.0f;
-							}
-							else {
-								degrees = glm::degrees(atan(changeInValues.y / changeInValues.x));
-							}
-							if ((degrees > -90.0f && degrees < 0.0f) && changeInValues.y > 0.0f) {
-								degrees += 180.0f;
-							}
-							else if ((degrees < 90.0f && degrees > 0.0f) && changeInValues.y < 0.0f && changeInValues.x < 0.0f) {
-								degrees += 180.0f;
-							}
-							ammo.Rotate3f(0.0f, 0.0f, degrees);
-							glm::vec2 changeInValuesNormalized = glm::normalize(changeInValues);
-							ammo.SetLinearVelocity(glm::vec3(changeInValuesNormalized.x * shootSpeed, changeInValuesNormalized.y * shootSpeed, 0.0f));
-							midair = true;;
-						}
-						submitAmmoRender = true;
-					}
-					else {
-						camera.BringWith(ammo);
-						midair = false;
-						submitAmmoRender = false;
-					}
-					ammo.Update(deltaTime);
-				}
 				///////////////////////////////////////////////////////////////////////////
 				playerSpriteTimer.ElapseTime(deltaTime);
 				if (playerSpriteTimer.HasFinished()) {
@@ -542,12 +523,20 @@ int main(void)
 						noneDisplayed = false;
 					}
 				}
-				if (noneDisplayed) {
-					actNumber = 1;
-					player.Scale3f(1.0f, 1.0f, 1.0f);
-					player.SetGravitationalAcceleration(glm::vec3(0.0f, -9.807f, 0.0f));
-					player.Translate3f(0.0f, 1.0f, 0.0f);
+				// FIND ME
+				if (!noneDisplayed) {
+					actNumber = 3;
 					movementSpeed = 0.05f;
+					shootSpeed = 15.0f;
+					glfwSetCursorPos(window, 0.0, 0.0);
+					movementEnabled = true;
+					flyEnabled = true;
+					lungeEnabled = true;
+					cursorEnabled = true;
+					shootingEnabled = true;
+					scoreMultiplier = 5.0f;
+					player.Scale3f(7.5f, 7.5f, 7.5f);
+					player.Translate3f(-5.0f, -1.0f, 0.0f);
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -565,73 +554,7 @@ int main(void)
 			
 			// Mark first act
 			if (actNumber == 3) {
-				movementEnabled = true;
-				flyEnabled = true;
-				lungeEnabled = false;
-				cursorEnabled = false;
-				shootingEnabled = false;
-				scoreMultiplier = 5.0f;
-				player.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
 				///////////////////////////////////////////////////////////////////////////
-				if (movementEnabled) {
-					if (zoomEnabled) {
-						if (wPressed) {
-							camera.MoveForward(deltaTime);
-						}
-						if (sPressed) {
-							camera.MoveBackward(deltaTime);
-						}
-					}
-					if (aPressed) {
-						if (player.GetLinearVelocity().x > 0) {
-							player.ApplyLinearVelocity(glm::vec3(-((movementSpeed / 0.007777) * deltaTime), 0.0f, 0.0f));
-						}
-						else {
-							camera.StrafeLeft(player, deltaTime);
-						}
-					}
-					if (dPressed) {
-						if (player.GetLinearVelocity().x > 0) {
-							player.ApplyLinearVelocity(glm::vec3((movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f));
-						}
-						else {
-							camera.StrafeRight(player, deltaTime);
-						}
-					}
-					if (spacePressed) {
-						if (player.GetCanJump()) {
-							if (!flyEnabled) {
-								player.SetCanJump(false);
-								player.ApplyLinearVelocity(glm::vec3(0.0f, (5.0f / 0.007777) * deltaTime, 0.0f));
-							}
-							else {
-								player.TranslateAdd3f(0.0f, movementSpeed / 0.007777 * deltaTime, 0.0f);
-							}
-						}
-					}
-					if (flyEnabled) {
-						if (controlPressed) {
-							player.TranslateAdd3f(0.0f, -(movementSpeed / 0.007777) * deltaTime, 0.0f);
-						}
-					}
-					if (lungeEnabled) {
-						if (lungeReady) {
-							if (shiftPressed) {
-								if (aPressed) {
-									player.ApplyLinearVelocity(glm::vec3(-5.0f, 0.0f, 0.0f));
-								}
-								else if (dPressed) {
-									player.ApplyLinearVelocity(glm::vec3(5.0f, 0.0f, 0.0f));
-								}
-								else {
-									player.ApplyLinearVelocity(glm::vec3(0.0f, 5.0f, 0.0f));
-								}
-								lungeTimer.Start();
-								lungeReady = false;
-							}
-						}
-					}
-				}
 				if (shootingEnabled) {
 					if (tPressed) {
 						ammo.SetLinearVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -648,7 +571,7 @@ int main(void)
 				}
 				///////////////////////////////////////////////////////////////////////////
 				camera.ChangeMovementSpeed(movementSpeed);
-				camera.Follow(player);
+				camera.Translate3f(0.0f, 0.0f, 5.0f);
 				glm::vec3 camPos = camera.GetTranslation();
 				///////////////////////////////////////////////////////////////////////////
 				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
@@ -662,9 +585,9 @@ int main(void)
 				if (shootingEnabled) {
 					if (shot) {
 						if (!midair) {
-							glm::vec3 playerPos = player.GetTranslation();
+							glm::vec3 satellitePos = satellite.GetTranslation();
 							glm::vec3 cursorPos = cursor.GetTranslation();
-							glm::vec2 changeInValues = glm::vec2(cursorPos.x - playerPos.x, cursorPos.y - playerPos.y);
+							glm::vec2 changeInValues = glm::vec2(cursorPos.x - satellitePos.x, cursorPos.y - satellitePos.y);
 							float degrees = 0.0f;
 							if (changeInValues.x == 0) {
 								degrees = 90.0f;
@@ -700,74 +623,21 @@ int main(void)
 					playerSpriteTimer.Start();
 				}
 				///////////////////////////////////////////////////////////////////////////
-				meteorSpriteTimer.ElapseTime(deltaTime);
-				if (meteorSpriteTimer.HasFinished()) {
-					for (unsigned int i = 0; i < food.size(); i++) {
-						food[i].Play(frames, 4);
-					}
-					meteorSpriteTimer.Reset(2.5f);
-					meteorSpriteTimer.Start();
-				}
-				///////////////////////////////////////////////////////////////////////////
-				bool noneDisplayed = true;
-				for (unsigned int i = 0; i < food.size(); i++) {
-					if (food[i].IsDisplayed()) {
-						IntersectData data = player.GetDoesIntersect(food[i]);
-						if (data.GetDoesIntersect()) {
-							glm::vec3 scale = food[i].GetScale();
-							float value = std::sqrtf(scale.x * scale.x + scale.y * scale.y + scale.z + scale.z);
-							int intValue = (int)((float)(value) * (scoreMultiplier));
-							player.ScaleAdd3f(value / (scoreMultiplier * scoreMultiplier), value / (scoreMultiplier * scoreMultiplier), 0.0f);
-							player.AddMass(food[i].GetMass());
-							score += intValue;
-							food[i].SetIsDisplayed(false);
-						}
-						else {
-							glm::vec3 playerPos = player.GetTranslation();
-							glm::vec3 foodPos = food[i].GetTranslation();
-							glm::vec2 changeInValues = glm::vec2(playerPos.x - foodPos.x, playerPos.y - foodPos.y);
-							float degrees = 0.0f;
-							if (changeInValues.x == 0) {
-								degrees = 90.0f;
-							}
-							else {
-								degrees = glm::degrees(atan(changeInValues.y / changeInValues.x));
-							}
-							if ((degrees > -90.0f && degrees < 0.0f) && changeInValues.y > 0.0f) {
-								degrees += 180.0f;
-							}
-							else if ((degrees < 90.0f && degrees > 0.0f) && changeInValues.y < 0.0f && changeInValues.x < 0.0f) {
-								degrees += 180.0f;
-							}
-							glm::vec2 changeInValuesNormalized = glm::normalize(changeInValues);
-							float meteorSpeed = 5 * player.GetMass() * food[i].GetMass() / (changeInValuesNormalized.x * changeInValuesNormalized.x + changeInValuesNormalized.y * changeInValuesNormalized.y);
-							food[i].Stop();
-							food[i].SetLinearAcceleration(glm::vec3(changeInValuesNormalized.x * meteorSpeed, changeInValuesNormalized.y * meteorSpeed, 0.0f));
-							food[i].Update(deltaTime);
-							renderer.submit(&food[i], camPos);
-						}
-						noneDisplayed = false;
-					}
-				}
-				if (noneDisplayed) {
-					actNumber = 1;
-					player.Scale3f(1.0f, 1.0f, 1.0f);
-					player.SetGravitationalAcceleration(glm::vec3(0.0f, -9.807f, 0.0f));
-					player.Translate3f(0.0f, 1.0f, 0.0f);
-					movementSpeed = 0.05f;
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					// SET ALL ACT 2 VALUES HERE
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				}
+				renderer.submit(&satellite, camPos);
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&player, camPos);
 				///////////////////////////////////////////////////////////////////////////
-
+				if (submitAmmoRender) {
+					renderer.submitForceRender(&ammo);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				if (cursorEnabled) {
+					cursor.Translate3f(camPos.x + cursorXPos * mouseSensitivity, camPos.y - cursorYPos * mouseSensitivity, 0.002f);
+					renderer.submitForceRender(&cursor);
+				}
+				///////////////////////////////////////////////////////////////////////////
 				renderer.flush(viewMatrix, projectionMatrix);
+				///////////////////////////////////////////////////////////////////////////
 			}
 
 			{

@@ -122,6 +122,13 @@ void Camera::ChangeMovementSpeed(float newSpeed)
 	movementSpeed = newSpeed;
 }
 
+void Camera::Translate3f(float x, float y, float z)
+{
+	cameraTranslation.x = x;
+	cameraTranslation.y = y;
+	cameraTranslation.z = z;
+}
+
 void Camera::BringWith(Object& obj)
 {
 	glm::vec3 originalPosition = obj.GetTranslation();
