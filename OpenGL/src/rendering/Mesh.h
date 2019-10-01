@@ -57,4 +57,5 @@ public:
 	bool IsDisplayed();
 	ShapeData GetShape();
 	void SetShape(ShapeData newShape);
+	void BringWith(Mesh& otherMesh);
 };

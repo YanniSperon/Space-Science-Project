@@ -237,3 +237,8 @@ void Mesh::SetShape(ShapeData newShape)
 {
 	shape = newShape;
 }
+
+void Mesh::BringWith(Mesh& otherMesh)
+{
+	otherMesh.TranslateVec3(translation);
+}

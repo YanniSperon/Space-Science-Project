@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <irrKlang.h>
 
 #include <iostream>
 #include <fstream>
@@ -22,6 +23,7 @@
 #include "Simple2DRenderer.h"
 #include "Vertex.h"
 #include "ShapeGenerator.h"
+#include "Generator.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -29,8 +31,10 @@
 #include "glm/gtx/quaternion.hpp"
 #include "stb_image/stb_image.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw_gl3.h"
+#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
+
+//#include "imgui/imgui.h"
+//#include "imgui/imgui_impl_glfw_gl3.h"
 
 Config config = Config("res/other/", "config.txt");
 
@@ -237,6 +241,12 @@ int main(void)
 		printf("Error!\n");
 	}
 
+	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
+
+	if (!engine) {
+		printf("Error creating irrKlang device\n");
+	}
+
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
 	{
@@ -251,109 +261,112 @@ int main(void)
 		glBlendEquation(GL_ADD);
 		glEnable(GL_DEPTH_TEST);
 
+		const char* attackSFXFilename = "res/audio/sfx/attack.wav";
+		const char* explosionSFXFilename = "res/audio/sfx/explosion.wav";
+		const char* jumpSFXFilename = "res/audio/sfx/jump.wav";
+		const char* pickupSFXFilename = "res/audio/sfx/pickup.wav";
+		const char* selectSFXFilename = "res/audio/sfx/select.wav";
+		const char* shootSFXFilename = "res/audio/sfx/shoot.wav";
+		engine->setSoundVolume(0);
+		irrklang::ISound* attackSFX = engine->play2D(attackSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		irrklang::ISound* explosionSFX = engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		irrklang::ISound* jumpSFX = engine->play2D(jumpSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		irrklang::ISound* pickupSFX = engine->play2D(pickupSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		irrklang::ISound* selectSFX = engine->play2D(selectSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		irrklang::ISound* shootSFX = engine->play2D(shootSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		
+		/*irrklang::ISound* music = engine->play2D(attackSFXFilename,
+			true, false, true, irrklang::ESM_AUTO_DETECT, true);*/
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint frames[4] = { 
 			loadSpriteSheet("res/images/sprites/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
 			loadSpriteSheet("res/images/sprites/", "f2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
 			loadSpriteSheet("res/images/sprites/", "f3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
 			loadSpriteSheet("res/images/sprites/", "f4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		GLuint volcanoBackgroundFrame = loadSpriteSheet("res/images/backgrounds/volcano/", "volcanostill.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint spaceBckgrnd = loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint letters = loadSpriteSheet("res/images/other/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		texCoords cursorCoords = getImageCoordinates(15, 15, 16, 16, 16, 16);
-
-		CollidableSprite player = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		Object volcanoBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
+		CollidableSprite planet = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), spaceBckgrnd);
 		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
 		Object cursor = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0]);
-		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> ground;
 		for (unsigned int i = 0; i < 100; i++) {
 			ground.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> food;
 		texCoords meteor = getImageCoordinates(2, 13, 3, 14, 16, 16);
 		srand(time(NULL));
 		for (unsigned int i = 0; i < 200; i++) {
-			float rx = (float)((rand() / (float)RAND_MAX * 100) - 50);
-			float ry = (float)((rand() / (float)RAND_MAX * 50) - 25);
-			float rsx = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
-			float rsy = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
-			int randInt = (int)std::round((rand() / (double)RAND_MAX * 4));
-			glm::vec2 bottomLeftTexCoord;
-			glm::vec2 topRightTexCoord;
-			
-			if (randInt == 0 || randInt == 4) {
-				bottomLeftTexCoord = meteor.bottomLeft;
-				topRightTexCoord = meteor.topRight;
-			}
-			else if (randInt == 1) {
-				bottomLeftTexCoord = meteor.topRight;
-				topRightTexCoord = meteor.bottomLeft;
-			}
-			else if (randInt == 2) {
-				bottomLeftTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
-				topRightTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
-			}
-			else if (randInt == 3) {
-				bottomLeftTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
-				topRightTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
-			}
-			food.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(rx, ry, 0.0f), glm::vec3(rsx, rsy, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, bottomLeftTexCoord, topRightTexCoord, frames[0], 2, rsx*rsy, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+			Generator::AddRandomMeteor(food, meteor, frames[0]);
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords ammoCoords = getImageCoordinates(0, 14, 2, 15, 16, 16);
-		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.001f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.001f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		Simple2DRenderer renderer;
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords satelliteCoords = getImageCoordinates(0, 11, 2, 13, 16, 16);
 		CollidableSprite satellite = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, satelliteCoords.bottomLeft, satelliteCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> incomingMeteors;
 		for (unsigned int i = 0; i < 10; i++) {
-			float rx = (float)((rand() / (float)RAND_MAX * 100) - 50);
-			float ry = (float)((rand() / (float)RAND_MAX * 50) - 25);
-			float rsx = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
-			float rsy = (float)((rand() / (float)RAND_MAX * 0.25) + 0.25);
-			int randInt = (int)std::round((rand() / (double)RAND_MAX * 4));
-			glm::vec2 bottomLeftTexCoord;
-			glm::vec2 topRightTexCoord;
-
-			if (randInt == 0 || randInt == 4) {
-				bottomLeftTexCoord = meteor.bottomLeft;
-				topRightTexCoord = meteor.topRight;
-			}
-			else if (randInt == 1) {
-				bottomLeftTexCoord = meteor.topRight;
-				topRightTexCoord = meteor.bottomLeft;
-			}
-			else if (randInt == 2) {
-				bottomLeftTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
-				topRightTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
-			}
-			else if (randInt == 3) {
-				bottomLeftTexCoord = glm::vec2(meteor.bottomLeft.x, meteor.topRight.y);
-				topRightTexCoord = glm::vec2(meteor.topRight.x, meteor.bottomLeft.y);
-			}
-			food.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(rx, ry, 0.0f), glm::vec3(rsx, rsy, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, bottomLeftTexCoord, topRightTexCoord, frames[0], 2, rsx* rsy, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+			Generator::AddRandomIncomingMeteor(incomingMeteors, meteor, frames[0], i);
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		texCoords pool = getImageCoordinates(2, 15, 4, 16, 16, 16);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		std::vector<CollidableSprite> pools;
+		for (unsigned int i = 0; i < 10; i++) {
+			Generator::AddPool(pools, pool, frames[0], i);
+		}
+		CollidableSprite p = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, pool.bottomLeft, pool.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		texCoords lavaTexCoords = getImageCoordinates(0, 9, 1, 10, 16, 16);
+		CollidableSprite lavaOne = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.25f, 0.4875f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, lavaTexCoords.bottomLeft, lavaTexCoords.topRight, frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite lavaTwo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-4.25f, 0.4875f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(lavaTexCoords.topRight.x, lavaTexCoords.bottomLeft.y), glm::vec2(lavaTexCoords.bottomLeft.x, lavaTexCoords.topRight.y), frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		texCoords volcanoTexCoords = getImageCoordinates(0, 0, 5, 3, 16, 16);
+		Object volcanoOne = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-5.0f, -3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), -0.5f, volcanoTexCoords.bottomLeft, volcanoTexCoords.topRight, frames[0]);
+		Object volcanoTwo = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, -3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), -0.5f, glm::vec2(volcanoTexCoords.topRight.x, volcanoTexCoords.bottomLeft.y), glm::vec2(volcanoTexCoords.bottomLeft.x, volcanoTexCoords.topRight.y), frames[0]);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		texCoords explosionTexCoords = getImageCoordinates(0, 10, 1, 11, 16, 16);
+		Sprite explosion = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.003f, explosionTexCoords.bottomLeft, explosionTexCoords.topRight, frames[0], 0);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glfwSetCursorPos(window, 0.0, 0.0);
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		float timeConstant = 1.0f;
-		
-		Timer playerSpriteTimer = Timer(0.5f);
-		playerSpriteTimer.Start();
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		Timer planetSpriteTimer = Timer(0.5f);
+		planetSpriteTimer.Start();
 		Timer meteorSpriteTimer = Timer(2.5f);
 		meteorSpriteTimer.Start();
+		Timer backgroundSpriteTimer = Timer(0.25f);
+		backgroundSpriteTimer.Start();
+		Timer volcanoOneSpriteTimer = Timer(0.4f);
+		volcanoOneSpriteTimer.Start();
+		Timer volcanoTwoSpriteTimer = Timer(0.6f);
+		volcanoTwoSpriteTimer.Start();
+		Timer explosionTimer = Timer(0.4f);
+		explosionTimer.Start();
+		Timer explosionSpriteTimer = Timer(0.1f);
+		explosionSpriteTimer.Start();
 		Timer lungeTimer = Timer(2.5f);
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		float scoreMultiplier = 1.0f;
 		int score = 0.0f;
+		int lives = 3;
 		double lastTime = glfwGetTime();
 		double deltaT = 0, nowTime = 0;
 		bool lungeReady = true;
@@ -368,6 +381,7 @@ int main(void)
 		bool lungeEnabled = false;
 		bool cursorEnabled = false;
 		bool shootingEnabled = false;
+		bool exploding = false;
 		unsigned int actNumber = 0;
 		movementSpeed = 0.01f;
 		movementEnabled = true;
@@ -376,12 +390,13 @@ int main(void)
 		cursorEnabled = false;
 		shootingEnabled = false;
 		scoreMultiplier = 5.0f;
-		player.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
+		planet.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
+		engine->setSoundVolume(1.0f);
 		// mine is 0,1,2, mark is 3,4, and chris is 5
-
-		ImGui::CreateContext();
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		/*ImGui::CreateContext();
 		ImGui_ImplGlfwGL3_Init(window, false);
-		ImGui::StyleColorsDark();
+		ImGui::StyleColorsDark();*/
 		
 		while (!glfwWindowShouldClose(window))
 		{
@@ -391,7 +406,7 @@ int main(void)
 
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-			ImGui_ImplGlfwGL3_NewFrame();
+			/*ImGui_ImplGlfwGL3_NewFrame();*/
 
 			float deltaTime = (float)deltaT * timeConstant;
 			
@@ -408,55 +423,41 @@ int main(void)
 						}
 					}
 					if (aPressed) {
-						if (player.GetLinearVelocity().x > 0) {
-							player.ApplyLinearVelocity(glm::vec3(-((movementSpeed/0.007777) * deltaTime), 0.0f, 0.0f));
+						if (planet.GetLinearVelocity().x > 0) {
+							planet.ApplyLinearVelocity(glm::vec3(-((movementSpeed/0.007777) * deltaTime), 0.0f, 0.0f));
 						}
 						else {
-							camera.StrafeLeft(player, deltaTime);
+							camera.StrafeLeft(planet, deltaTime);
 						}
 					}
 					if (dPressed) {
-						if (player.GetLinearVelocity().x > 0) {
-							player.ApplyLinearVelocity(glm::vec3((movementSpeed/0.007777) * deltaTime, 0.0f, 0.0f));
+						if (planet.GetLinearVelocity().x > 0) {
+							planet.ApplyLinearVelocity(glm::vec3((movementSpeed/0.007777) * deltaTime, 0.0f, 0.0f));
 						}
 						else {
-							camera.StrafeRight(player, deltaTime);
+							camera.StrafeRight(planet, deltaTime);
 						}
 					}
 					if (spacePressed) {
-						if (player.GetCanJump()) {
+						if (planet.GetCanJump()) {
 							if (!flyEnabled) {
-								player.SetCanJump(false);
-								player.ApplyLinearVelocity(glm::vec3(0.0f, (5.0f/0.007777) * deltaTime, 0.0f));
+								planet.SetCanJump(false);
+								planet.ApplyLinearVelocity(glm::vec3(0.0f, (5.0f/0.007777) * deltaTime, 0.0f));
 							}
 							else {
-								player.TranslateAdd3f(0.0f, movementSpeed/0.007777 * deltaTime, 0.0f);
+								planet.TranslateAdd3f(0.0f, movementSpeed/0.007777 * deltaTime, 0.0f);
 							}
 						}
 					}
 					if (flyEnabled) {
 						if (controlPressed) {
-							player.TranslateAdd3f(0.0f, -(movementSpeed/0.007777) * deltaTime, 0.0f);
-						}
-					}
-				}
-				if (shootingEnabled) {
-					if (tPressed) {
-						ammo.SetLinearVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
-						ammo.Rotate3f(0.0f, 0.0f, 0.0f);
-						shot = false;
-					}
-				}
-				if (clickingEnabled) {
-					if (leftClicked) {
-						if (shootingEnabled) {
-							shot = true;
+							planet.TranslateAdd3f(0.0f, -(movementSpeed/0.007777) * deltaTime, 0.0f);
 						}
 					}
 				}
 				///////////////////////////////////////////////////////////////////////////
 				camera.ChangeMovementSpeed(movementSpeed);
-				camera.Follow(player);
+				camera.Follow(planet);
 				glm::vec3 camPos = camera.GetTranslation();
 				///////////////////////////////////////////////////////////////////////////
 				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
@@ -467,11 +468,11 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submitForceRender(&background);
 				///////////////////////////////////////////////////////////////////////////
-				playerSpriteTimer.ElapseTime(deltaTime);
-				if (playerSpriteTimer.HasFinished()) {
-					player.Play(frames, 4);
-					playerSpriteTimer.Reset(0.5f);
-					playerSpriteTimer.Start();
+				planetSpriteTimer.ElapseTime(deltaTime);
+				if (planetSpriteTimer.HasFinished()) {
+					planet.Play(frames, 4);
+					planetSpriteTimer.Reset(0.5f);
+					planetSpriteTimer.Start();
 				}
 				///////////////////////////////////////////////////////////////////////////
 				meteorSpriteTimer.ElapseTime(deltaTime);
@@ -483,23 +484,23 @@ int main(void)
 					meteorSpriteTimer.Start();
 				}
 				///////////////////////////////////////////////////////////////////////////
-				bool noneDisplayed = true;
+				bool anyDisplayed = false;
 				for (unsigned int i = 0; i < food.size(); i++) {
 					if (food[i].IsDisplayed()) {
-						IntersectData data = player.GetDoesIntersect(food[i]);
+						IntersectData data = planet.GetDoesIntersect(food[i]);
 						if (data.GetDoesIntersect()) {
 							glm::vec3 scale = food[i].GetScale();
 							float value = std::sqrtf(scale.x * scale.x + scale.y * scale.y + scale.z + scale.z);
 							int intValue = (int)((float)(value)*(scoreMultiplier));
-							player.ScaleAdd3f(value / (scoreMultiplier * scoreMultiplier), value / (scoreMultiplier * scoreMultiplier), 0.0f);
-							player.AddMass(food[i].GetMass());
+							planet.ScaleAdd3f(value / (scoreMultiplier * scoreMultiplier), value / (scoreMultiplier * scoreMultiplier), 0.0f);
+							planet.AddMass(food[i].GetMass());
 							score += intValue;
 							food[i].SetIsDisplayed(false);
 						}
 						else {
-							glm::vec3 playerPos = player.GetTranslation();
+							glm::vec3 planetPos = planet.GetTranslation();
 							glm::vec3 foodPos = food[i].GetTranslation();
-							glm::vec2 changeInValues = glm::vec2(playerPos.x - foodPos.x, playerPos.y - foodPos.y);
+							glm::vec2 changeInValues = glm::vec2(planetPos.x - foodPos.x, planetPos.y - foodPos.y);
 							float degrees = 0.0f;
 							if (changeInValues.x == 0) {
 								degrees = 90.0f;
@@ -514,29 +515,30 @@ int main(void)
 								degrees += 180.0f;
 							}
 							glm::vec2 changeInValuesNormalized = glm::normalize(changeInValues);
-							float meteorSpeed = 5 * player.GetMass() * food[i].GetMass() / (changeInValuesNormalized.x * changeInValuesNormalized.x + changeInValuesNormalized.y * changeInValuesNormalized.y);
+							float meteorSpeed = 5 * planet.GetMass() * food[i].GetMass() / (changeInValuesNormalized.x * changeInValuesNormalized.x + changeInValuesNormalized.y * changeInValuesNormalized.y);
 							food[i].Stop();
 							food[i].SetLinearAcceleration(glm::vec3(changeInValuesNormalized.x* meteorSpeed, changeInValuesNormalized.y* meteorSpeed, 0.0f));
 							food[i].Update(deltaTime);
 							renderer.submit(&food[i], camPos);
 						}
-						noneDisplayed = false;
+						anyDisplayed = true;
 					}
 				}
-				// FIND ME
-				if (!noneDisplayed) {
-					actNumber = 3;
+				// FIND ME 1
+				if (!!anyDisplayed) {
+					actNumber = 1;
 					movementSpeed = 0.05f;
 					shootSpeed = 15.0f;
 					glfwSetCursorPos(window, 0.0, 0.0);
 					movementEnabled = true;
-					flyEnabled = true;
-					lungeEnabled = true;
-					cursorEnabled = true;
-					shootingEnabled = true;
+					flyEnabled = false;
+					lungeEnabled = false;
+					cursorEnabled = false;
+					shootingEnabled = false;
 					scoreMultiplier = 5.0f;
-					player.Scale3f(7.5f, 7.5f, 7.5f);
-					player.Translate3f(-5.0f, -1.0f, 0.0f);
+					planet.Scale3f(1.0f, 1.0f, 1.0f);
+					planet.Translate3f(0.0f, 0.0f, 0.0f);
+					camera.Translate3f(0.0f, 1.0f, 5.0f);
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,14 +548,111 @@ int main(void)
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				}
 				///////////////////////////////////////////////////////////////////////////
-				renderer.submit(&player, camPos);
+				renderer.submit(&planet, camPos);
 				///////////////////////////////////////////////////////////////////////////
 
 				renderer.flush(viewMatrix, projectionMatrix);
 			} 
-			
+			// Yanni second act
+			if (actNumber == 1) {
+				///////////////////////////////////////////////////////////////////////////
+				if (movementEnabled) {
+					if (dPressed) {
+						bool movable = true;
+						for (unsigned int i = 0; i < pools.size(); i++) {
+							glm::vec3 poolsTrans = pools[i].GetTranslation();
+							if (!(poolsTrans.x < 10.0f)) {
+								movable = false;
+							}
+						}
+						if (movable) {
+							for (unsigned int i = 0; i < pools.size(); i++) {
+								pools[i].TranslateAdd3f((movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f);
+							}
+						}
+					}
+					if (aPressed) {
+						bool movable = true;
+						for (unsigned int i = 0; i < pools.size(); i++) {
+							glm::vec3 poolsTrans = pools[i].GetTranslation();
+							if (!(poolsTrans.x > -10.0f)) {
+								movable = false;
+							}
+						}
+						if (movable) {
+							for (unsigned int i = 0; i < pools.size(); i++) {
+								pools[i].TranslateAdd3f((-movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f);
+							}
+						}
+					}
+				}
+				///////////////////////////////////////////////////////////////////////////
+				glm::vec3 camPos = camera.GetTranslation();
+				///////////////////////////////////////////////////////////////////////////
+				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
+				glm::mat4 projectionMatrix;
+				if (currentWidth > 0 && currentHeight > 0) {
+					projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 150.0f);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				for (unsigned int i = 0; i < pools.size(); i++) {
+					if (pools[i].GetDoesIntersect(lavaOne).GetDoesIntersect() || pools[i].GetDoesIntersect(lavaTwo).GetDoesIntersect()) {
+						pools[i].SetIsDisplayed(false);
+					}
+					if (pools[i].GetTranslation().y < -10) {
+						pools[i].SetIsDisplayed(false);
+					}
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submitForceRender(&volcanoBackground);
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submit(&volcanoOne, camPos);
+				renderer.submit(&volcanoTwo, camPos);
+				///////////////////////////////////////////////////////////////////////////
+				bool anyDisplayed = false;
+				for (unsigned int i = 0; i < pools.size(); i++) {
+					if (pools[i].IsDisplayed()) {
+						pools[i].Update(deltaTime);
+						renderer.submit(&pools[i], camPos);
+						anyDisplayed = true;
+					}
+				}
+				///////////////////////////////////////////////////////////////////////////
+				// FIND ME 2
+				if (!!anyDisplayed) {
+					actNumber = 2;
+					cursorEnabled = true;
+					shootingEnabled = true;
+					movementEnabled = false;
+					meteorSpriteTimer.Reset(0.5f);
+					meteorSpriteTimer.Start();
+				}
+				///////////////////////////////////////////////////////////////////////////
+				volcanoOneSpriteTimer.ElapseTime(deltaTime);
+				if (volcanoOneSpriteTimer.HasFinished()) {
+					lavaOne.PlayReversible(frames, 4);
+					volcanoOneSpriteTimer.Reset(0.4f);
+					volcanoOneSpriteTimer.Start();
+				}
+				///////////////////////////////////////////////////////////////////////////
+				volcanoTwoSpriteTimer.ElapseTime(deltaTime);
+				if (volcanoTwoSpriteTimer.HasFinished()) {
+					lavaTwo.PlayReversible(frames, 4);
+					volcanoTwoSpriteTimer.Reset(0.6f);
+					volcanoTwoSpriteTimer.Start();
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submit(&lavaOne, camPos);
+				renderer.submit(&lavaTwo, camPos);
+				///////////////////////////////////////////////////////////////////////////
+
+				renderer.flush(viewMatrix, projectionMatrix);
+			}
+
+
+
 			// Mark first act
-			if (actNumber == 3) {
+			if (actNumber == 2) {
 				///////////////////////////////////////////////////////////////////////////
 				if (shootingEnabled) {
 					if (tPressed) {
@@ -565,7 +664,10 @@ int main(void)
 				if (clickingEnabled) {
 					if (leftClicked) {
 						if (shootingEnabled) {
-							shot = true;
+							if (!midair) {
+								shot = true;
+								engine->play2D(shootSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							}
 						}
 					}
 				}
@@ -609,30 +711,133 @@ int main(void)
 						submitAmmoRender = true;
 					}
 					else {
-						camera.BringWith(ammo);
+						satellite.BringWith(ammo);
 						midair = false;
 						submitAmmoRender = false;
 					}
 					ammo.Update(deltaTime);
+					if (ammo.GetTranslation().x < -10.0f || ammo.GetTranslation().x > 10.0f || ammo.GetTranslation().y < -10.0f || ammo.GetTranslation().y > 10.0f) {
+						ammo.SetLinearVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+						shot = false;
+					}
 				}
 				///////////////////////////////////////////////////////////////////////////
-				playerSpriteTimer.ElapseTime(deltaTime);
-				if (playerSpriteTimer.HasFinished()) {
-					player.Play(frames, 4);
-					playerSpriteTimer.Reset(0.5f);
-					playerSpriteTimer.Start();
+				if (planet.GetDoesIntersect(ammo).GetDoesIntersect()) {
+					engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+					ammo.SetLinearVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+					shot = false;
+					exploding = true;
+					explosion.TranslateVec3(ammo.GetTranslation());
+					explosionTimer.Reset(0.4f);
+					explosionTimer.Start();
+					explosionSpriteTimer.Reset(0.1f);
+					explosionSpriteTimer.Start();
+					lives--;
 				}
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&satellite, camPos);
 				///////////////////////////////////////////////////////////////////////////
-				renderer.submit(&player, camPos);
+				planet.Translate3f(-3.0f, 0.0f, 0.0f);
+				planet.Scale3f(5.0f, 5.0f, 5.0f);
+				planetSpriteTimer.ElapseTime(deltaTime);
+				if (planetSpriteTimer.HasFinished()) {
+					planet.Play(frames, 4);
+					planetSpriteTimer.Reset(0.5f);
+					planetSpriteTimer.Start();
+				}
+				renderer.submit(&planet, camPos);
 				///////////////////////////////////////////////////////////////////////////
 				if (submitAmmoRender) {
 					renderer.submitForceRender(&ammo);
 				}
 				///////////////////////////////////////////////////////////////////////////
+				bool anyDisplayed = false;
+				for (unsigned int i = 0; i < incomingMeteors.size(); i++) {
+					if (incomingMeteors[i].IsDisplayed()) {
+						if (incomingMeteors[i].GetDoesIntersect(planet).GetDoesIntersect()) {
+							incomingMeteors[i].SetIsDisplayed(false);
+							engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							exploding = true;
+							explosion.TranslateVec3(incomingMeteors[i].GetTranslation());
+							explosionTimer.Reset(0.4f);
+							explosionTimer.Start();
+							explosionSpriteTimer.Reset(0.1f);
+							explosionSpriteTimer.Start();
+							lives--;
+						}
+						else if (!(incomingMeteors[i].GetTranslation().x > -25.0f)) {
+							incomingMeteors[i].SetIsDisplayed(false);
+						}
+						if (ammo.GetDoesIntersect(incomingMeteors[i]).GetDoesIntersect()) {
+							incomingMeteors[i].SetIsDisplayed(false);
+							engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							ammo.SetLinearVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+							exploding = true;
+							glm::vec3 meteorPos = incomingMeteors[i].GetTranslation();
+							glm::vec3 ammoPos = ammo.GetTranslation();
+							glm::vec3 changeInValues = meteorPos - ammoPos;
+							glm::vec3 dividedValue = changeInValues / 2.0f;
+							glm::vec3 explosionPos = ammoPos + dividedValue;
+							explosion.TranslateVec3(explosionPos);
+							explosionTimer.Reset(0.4f);
+							explosionTimer.Start();
+							explosionSpriteTimer.Reset(0.1f);
+							explosionSpriteTimer.Start();
+							shot = false;
+							score += 100;
+						}
+						if (satellite.GetDoesIntersect(incomingMeteors[i]).GetDoesIntersect()) {
+							incomingMeteors[i].SetIsDisplayed(false);
+							engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							exploding = true;
+							glm::vec3 meteorPos = incomingMeteors[i].GetTranslation();
+							glm::vec3 satellitePos = satellite.GetTranslation();
+							glm::vec3 changeInValues = meteorPos - satellitePos;
+							glm::vec3 dividedValue = changeInValues / 2.0f;
+							glm::vec3 explosionPos = satellitePos + dividedValue;
+							explosion.TranslateVec3(explosionPos);
+							explosionTimer.Reset(0.4f);
+							explosionTimer.Start();
+							explosionSpriteTimer.Reset(0.1f);
+							explosionSpriteTimer.Start();
+						}
+						incomingMeteors[i].Update(deltaTime);
+						renderer.submit(&incomingMeteors[i], camPos);
+						anyDisplayed = true;
+					}
+				}
+				// FIND ME 3
+				if (!anyDisplayed || lives == 0) {
+					actNumber = 3;
+				}
+				meteorSpriteTimer.ElapseTime(deltaTime);
+				if (meteorSpriteTimer.HasFinished()) {
+					for (unsigned int i = 0; i < incomingMeteors.size(); i++) {
+						if (incomingMeteors[i].IsDisplayed()) {
+							incomingMeteors[i].Play(frames, 4);
+						}
+					}
+					meteorSpriteTimer.Reset(0.5f);
+					meteorSpriteTimer.Start();
+				}
+				if (exploding) {
+					renderer.submit(&explosion, camPos);
+					explosionTimer.ElapseTime(deltaTime);
+					explosionSpriteTimer.ElapseTime(deltaTime);
+					if (explosionSpriteTimer.HasFinished()) {
+						explosion.Play(frames, 4);
+						explosionSpriteTimer.Reset(0.1f);
+						explosionSpriteTimer.Start();
+					}
+					if (explosionTimer.HasFinished()) {
+						exploding = false;
+						explosionTimer.Reset(0.4f);
+						explosionTimer.Start();
+					}
+				}
+				///////////////////////////////////////////////////////////////////////////
 				if (cursorEnabled) {
-					cursor.Translate3f(camPos.x + cursorXPos * mouseSensitivity, camPos.y - cursorYPos * mouseSensitivity, 0.002f);
+					cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
 					renderer.submitForceRender(&cursor);
 				}
 				///////////////////////////////////////////////////////////////////////////
@@ -640,19 +845,40 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 			}
 
-			{
+			/*{
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			}
+			}*/
 
-			ImGui::Render();
-			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+			/*ImGui::Render();
+			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());*/
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
+
+		if (shootSFX) {
+			shootSFX->drop();
+		}
+		if (attackSFX) {
+			attackSFX->drop();
+		}
+		if (explosionSFX) {
+			explosionSFX->drop();
+		}
+		if (jumpSFX) {
+			jumpSFX->drop();
+		}
+		if (pickupSFX) {
+			pickupSFX->drop();
+		}
+		if (selectSFX) {
+			selectSFX->drop();
+		}
+
+		engine->drop();
 	}
 
-	ImGui_ImplGlfwGL3_Shutdown();
-	ImGui::DestroyContext();
+	/*ImGui_ImplGlfwGL3_Shutdown();
+	ImGui::DestroyContext();*/
 	glfwTerminate();
 	return 0;
 }
