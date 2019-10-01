@@ -102,8 +102,6 @@ IntersectData CollidableSprite::GetDoesIntersect(const CollidableSprite& other)
 	glm::vec3 otherMinExtents = other.GetMinExtents();
 	glm::vec3 otherMaxExtents = other.GetMaxExtents();
 	////////////////////////////////////////////////////////////////////////////////
-	glm::vec3 distance = minExtents - otherMinExtents;
-	////////////////////////////////////////////////////////////////////////////////
 	glm::vec2 obj1Point1 = glm::vec2(minExtents.x, maxExtents.y);
 	glm::vec2 obj1Point2 = glm::vec2(maxExtents.x, maxExtents.y);
 	glm::vec2 obj1Point3 = glm::vec2(minExtents.x, minExtents.y);
@@ -132,6 +130,18 @@ IntersectData CollidableSprite::GetDoesIntersect(const CollidableSprite& other)
 		(obj1Point4.x >= obj2Point3.x && obj1Point4.x <= obj2Point2.x &&
 		obj1Point4.y >= obj2Point3.y && obj1Point4.y <= obj2Point2.y)))
 	{
+		return IntersectData(true, 0.0f);
+	}
+	return IntersectData(false, 0.0f);
+}
+
+IntersectData CollidableSprite::IsPointInside(const glm::vec3& point)
+{
+	////////////////////////////////////////////////////////////////////////////////
+	glm::vec3 minExtents = GetMinExtents();
+	glm::vec3 maxExtents = GetMaxExtents();
+	////////////////////////////////////////////////////////////////////////////////
+	if (point.x <= maxExtents.x && point.x >= minExtents.x && point.y <= maxExtents.y && point.y >= minExtents.y) {
 		return IntersectData(true, 0.0f);
 	}
 	return IntersectData(false, 0.0f);

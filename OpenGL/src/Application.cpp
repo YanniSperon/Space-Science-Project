@@ -24,14 +24,14 @@
 #include "Vertex.h"
 #include "ShapeGenerator.h"
 #include "Generator.h"
+#include "Loader.h"
+#include "Letters.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "stb_image/stb_image.h"
-
-#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
 
 //#include "imgui/imgui.h"
 //#include "imgui/imgui_impl_glfw_gl3.h"
@@ -175,41 +175,6 @@ static void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 	}
 }
 
-static GLuint loadSpriteSheet(const std::string texDir, const std::string texName, GLint textureWrapS, GLint textureWrapT, GLint textureMinFilter, GLint textureMaxFilter) {
-	GLuint texID;
-	glGenTextures(1, &texID);
-	glBindTexture(GL_TEXTURE_2D, texID);
-	stbi_set_flip_vertically_on_load(1);
-
-	int width, height, nrChannels;
-	std::string str = texDir + texName;
-	const char* c = str.c_str();
-	unsigned char* data = stbi_load(c, &width, &height, &nrChannels, 0);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMaxFilter);
-
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		printf("Failed to load texture!\n");
-	}
-	return texID;
-}
-static texCoords getImageCoordinates(unsigned int bottomLeftSquareX, unsigned int bottomLeftSquareY, unsigned int topRightSquareX, unsigned int topRightSquareY, unsigned int maxSquaresX, unsigned int maxSquaresY) {
-	//4, 15, 6, 16
-	texCoords answer;
-	answer.bottomLeft = glm::vec2((float)bottomLeftSquareX / (float)maxSquaresX, (float)bottomLeftSquareY / (float)maxSquaresY);
-	answer.topRight = glm::vec2((float)topRightSquareX / (float)maxSquaresX, (float)topRightSquareY / (float)maxSquaresY);
-	return answer;
-}
-
 
 
 int main(void)
@@ -250,23 +215,25 @@ int main(void)
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
 	{
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwSetKeyCallback(window, keyCallback);
 		glfwSetCursorPosCallback(window, cursorPositionCallback);
 		glfwSetMouseButtonCallback(window, mouseButtonCallback);
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendEquation(GL_ADD);
 		glEnable(GL_DEPTH_TEST);
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		const char* attackSFXFilename = "res/audio/sfx/attack.wav";
 		const char* explosionSFXFilename = "res/audio/sfx/explosion.wav";
 		const char* jumpSFXFilename = "res/audio/sfx/jump.wav";
 		const char* pickupSFXFilename = "res/audio/sfx/pickup.wav";
 		const char* selectSFXFilename = "res/audio/sfx/select.wav";
 		const char* shootSFXFilename = "res/audio/sfx/shoot.wav";
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		engine->setSoundVolume(0);
 		irrklang::ISound* attackSFX = engine->play2D(attackSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
 		irrklang::ISound* explosionSFX = engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
@@ -274,30 +241,26 @@ int main(void)
 		irrklang::ISound* pickupSFX = engine->play2D(pickupSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
 		irrklang::ISound* selectSFX = engine->play2D(selectSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
 		irrklang::ISound* shootSFX = engine->play2D(shootSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		
-		/*irrklang::ISound* music = engine->play2D(attackSFXFilename,
-			true, false, true, irrklang::ESM_AUTO_DETECT, true);*/
-
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint frames[4] = { 
-			loadSpriteSheet("res/images/sprites/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/sprites/", "f2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/sprites/", "f3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
-			loadSpriteSheet("res/images/sprites/", "f4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
+			Loader::loadSpriteSheet("res/images/sprites/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			Loader::loadSpriteSheet("res/images/sprites/", "f2.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			Loader::loadSpriteSheet("res/images/sprites/", "f3.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
+			Loader::loadSpriteSheet("res/images/sprites/", "f4.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST)
 		};
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		GLuint volcanoBackgroundFrame = loadSpriteSheet("res/images/backgrounds/volcano/", "volcanostill.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint volcanoBackgroundFrame = Loader::loadSpriteSheet("res/images/backgrounds/volcano/", "volcanostill.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		GLuint spaceBckgrnd = loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint sphereCow = loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint letters = loadSpriteSheet("res/images/other/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		texCoords cursorCoords = getImageCoordinates(15, 15, 16, 16, 16, 16);
+		GLuint spaceBckgrnd = Loader::loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint sphereCow = Loader::loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint lettersTex = Loader::loadSpriteSheet("res/images/other/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		texCoords cursorCoords = Loader::getImageCoordinates(15, 15, 16, 16, 16, 16);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		Object volcanoBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
 		CollidableSprite planet = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), spaceBckgrnd);
-		Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
-		Object cursor = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0]);
+		//Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
+		CollidableSprite cursor = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> ground;
 		for (unsigned int i = 0; i < 100; i++) {
@@ -305,25 +268,29 @@ int main(void)
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> food;
-		texCoords meteor = getImageCoordinates(2, 13, 3, 14, 16, 16);
+		texCoords meteor = Loader::getImageCoordinates(2, 13, 3, 14, 16, 16);
 		srand(time(NULL));
 		for (unsigned int i = 0; i < 200; i++) {
 			Generator::AddRandomMeteor(food, meteor, frames[0]);
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords ammoCoords = getImageCoordinates(0, 14, 2, 15, 16, 16);
+		texCoords ammoCoords = Loader::getImageCoordinates(0, 14, 2, 15, 16, 16);
 		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.001f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		Simple2DRenderer renderer;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords satelliteCoords = getImageCoordinates(0, 11, 2, 13, 16, 16);
+		texCoords satelliteCoords = Loader::getImageCoordinates(0, 11, 2, 13, 16, 16);
 		CollidableSprite satellite = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, satelliteCoords.bottomLeft, satelliteCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> incomingMeteors;
 		for (unsigned int i = 0; i < 10; i++) {
 			Generator::AddRandomIncomingMeteor(incomingMeteors, meteor, frames[0], i);
+		}/////////////////////////////////////////////////////////////////////////////////////////////////////
+		std::vector<CollidableSprite> secondIncomingMeteors;
+		for (unsigned int i = 0; i < 20; i++) {
+			Generator::AddRandomIncomingMeteorFast(secondIncomingMeteors, meteor, frames[0], i);
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords pool = getImageCoordinates(2, 15, 4, 16, 16, 16);
+		texCoords pool = Loader::getImageCoordinates(2, 15, 4, 16, 16, 16);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> pools;
 		for (unsigned int i = 0; i < 10; i++) {
@@ -331,16 +298,186 @@ int main(void)
 		}
 		CollidableSprite p = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, pool.bottomLeft, pool.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords lavaTexCoords = getImageCoordinates(0, 9, 1, 10, 16, 16);
-		CollidableSprite lavaOne = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.25f, 0.4875f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, lavaTexCoords.bottomLeft, lavaTexCoords.topRight, frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
-		CollidableSprite lavaTwo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-4.25f, 0.4875f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(lavaTexCoords.topRight.x, lavaTexCoords.bottomLeft.y), glm::vec2(lavaTexCoords.bottomLeft.x, lavaTexCoords.topRight.y), frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		texCoords lavaTexCoords = Loader::getImageCoordinates(0, 9, 1, 10, 16, 16);
+		CollidableSprite lavaOne = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(6.5f, 0.45, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, lavaTexCoords.bottomLeft, lavaTexCoords.topRight, frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite lavaTwo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-6.5f, 0.45f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(lavaTexCoords.topRight.x, lavaTexCoords.bottomLeft.y), glm::vec2(lavaTexCoords.bottomLeft.x, lavaTexCoords.topRight.y), frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords volcanoTexCoords = getImageCoordinates(0, 0, 5, 3, 16, 16);
+		texCoords volcanoTexCoords = Loader::getImageCoordinates(0, 0, 5, 3, 16, 16);
 		Object volcanoOne = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-5.0f, -3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), -0.5f, volcanoTexCoords.bottomLeft, volcanoTexCoords.topRight, frames[0]);
 		Object volcanoTwo = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, -3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), -0.5f, glm::vec2(volcanoTexCoords.topRight.x, volcanoTexCoords.bottomLeft.y), glm::vec2(volcanoTexCoords.bottomLeft.x, volcanoTexCoords.topRight.y), frames[0]);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		texCoords explosionTexCoords = getImageCoordinates(0, 10, 1, 11, 16, 16);
+		texCoords explosionTexCoords = Loader::getImageCoordinates(0, 10, 1, 11, 16, 16);
 		Sprite explosion = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.003f, explosionTexCoords.bottomLeft, explosionTexCoords.topRight, frames[0], 0);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		texCoords steamTexCoords = Loader::getImageCoordinates(0, 8, 1, 9, 16, 16);
+		Sprite steam = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.003f, steamTexCoords.bottomLeft, steamTexCoords.topRight, frames[0], 0);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		GLuint blankTex = 0;
+		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blankTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		Letters sentence = Letters("hellothisisatest", lettersTex, 2, glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f));
+		//std::string sentence = "hello";
+		//std::vector<Object> letters;
+		//int lines = 1;
+		//GLuint tex = lettersTex;
+		////////////////////////////////////////////////////////////////////
+		texCoords aTex = Loader::getImageCoordinates(0, 15, 1, 16, 8, 16);
+		//texCoords bTex = Loader::getImageCoordinates(2, 15, 3, 16, 8, 16);
+		//texCoords cTex = Loader::getImageCoordinates(4, 15, 5, 16, 8, 16);
+		//texCoords dTex = Loader::getImageCoordinates(6, 15, 7, 16, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords eTex = Loader::getImageCoordinates(0, 14, 1, 15, 8, 16);
+		//texCoords fTex = Loader::getImageCoordinates(2, 14, 3, 15, 8, 16);
+		//texCoords gTex = Loader::getImageCoordinates(4, 14, 5, 15, 8, 16);
+		//texCoords hTex = Loader::getImageCoordinates(6, 14, 7, 15, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords iTex = Loader::getImageCoordinates(0, 13, 1, 14, 8, 16);
+		//texCoords jTex = Loader::getImageCoordinates(2, 13, 3, 14, 8, 16);
+		//texCoords kTex = Loader::getImageCoordinates(4, 13, 5, 14, 8, 16);
+		//texCoords lTex = Loader::getImageCoordinates(6, 13, 7, 14, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords mTex = Loader::getImageCoordinates(0, 12, 1, 13, 8, 16);
+		//texCoords nTex = Loader::getImageCoordinates(2, 12, 3, 13, 8, 16);
+		//texCoords oTex = Loader::getImageCoordinates(4, 12, 5, 13, 8, 16);
+		//texCoords pTex = Loader::getImageCoordinates(6, 12, 7, 13, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords qTex = Loader::getImageCoordinates(0, 11, 1, 12, 8, 16);
+		//texCoords rTex = Loader::getImageCoordinates(2, 11, 3, 12, 8, 16);
+		//texCoords sTex = Loader::getImageCoordinates(4, 11, 5, 12, 8, 16);
+		//texCoords tTex = Loader::getImageCoordinates(6, 11, 7, 12, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords uTex = Loader::getImageCoordinates(0, 10, 1, 11, 8, 16);
+		//texCoords vTex = Loader::getImageCoordinates(2, 10, 3, 11, 8, 16);
+		//texCoords wTex = Loader::getImageCoordinates(4, 10, 5, 11, 8, 16);
+		//texCoords xTex = Loader::getImageCoordinates(6, 10, 7, 11, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords yTex = Loader::getImageCoordinates(0, 9, 1, 10, 8, 16);
+		//texCoords zTex = Loader::getImageCoordinates(2, 9, 3, 10, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////
+		//texCoords ATex = Loader::getImageCoordinates(1, 15, 2, 16, 8, 16);
+		//texCoords BTex = Loader::getImageCoordinates(3, 15, 4, 16, 8, 16);
+		//texCoords CTex = Loader::getImageCoordinates(5, 15, 6, 16, 8, 16);
+		//texCoords DTex = Loader::getImageCoordinates(7, 15, 8, 16, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords ETex = Loader::getImageCoordinates(1, 14, 2, 15, 8, 16);
+		//texCoords FTex = Loader::getImageCoordinates(3, 14, 4, 15, 8, 16);
+		//texCoords GTex = Loader::getImageCoordinates(5, 14, 6, 15, 8, 16);
+		//texCoords HTex = Loader::getImageCoordinates(7, 14, 8, 15, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords ITex = Loader::getImageCoordinates(1, 13, 2, 14, 8, 16);
+		//texCoords JTex = Loader::getImageCoordinates(3, 13, 4, 14, 8, 16);
+		//texCoords KTex = Loader::getImageCoordinates(5, 13, 6, 14, 8, 16);
+		//texCoords LTex = Loader::getImageCoordinates(7, 13, 8, 14, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords MTex = Loader::getImageCoordinates(1, 12, 2, 13, 8, 16);
+		//texCoords NTex = Loader::getImageCoordinates(3, 12, 4, 13, 8, 16);
+		//texCoords OTex = Loader::getImageCoordinates(5, 12, 6, 13, 8, 16);
+		//texCoords PTex = Loader::getImageCoordinates(7, 12, 8, 13, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords QTex = Loader::getImageCoordinates(1, 11, 2, 12, 8, 16);
+		//texCoords RTex = Loader::getImageCoordinates(3, 11, 4, 12, 8, 16);
+		//texCoords STex = Loader::getImageCoordinates(5, 11, 6, 12, 8, 16);
+		//texCoords TTex = Loader::getImageCoordinates(7, 11, 8, 12, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords UTex = Loader::getImageCoordinates(1, 10, 2, 11, 8, 16);
+		//texCoords VTex = Loader::getImageCoordinates(3, 10, 4, 11, 8, 16);
+		//texCoords WTex = Loader::getImageCoordinates(5, 10, 6, 11, 8, 16);
+		//texCoords XTex = Loader::getImageCoordinates(7, 10, 8, 11, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		//texCoords YTex = Loader::getImageCoordinates(1, 9, 2, 10, 8, 16);
+		//texCoords ZTex = Loader::getImageCoordinates(3, 9, 4, 10, 8, 16);
+		////////////////////////////////////////////////////////////////////
+
+		//for (unsigned int i = 0; i < sentence.size(); i++) {
+		//	char letter = sentence[i];
+		//	switch (letter) {
+		//	case 'a':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, aTex.bottomLeft, aTex.topRight, tex));
+		//		break;
+		//	case 'b':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, bTex.bottomLeft, bTex.topRight, tex));
+		//		break;
+		//	case 'c':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, cTex.bottomLeft, cTex.topRight, tex));
+		//		break;
+		//	case 'd':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, dTex.bottomLeft, dTex.topRight, tex));
+		//		break;
+		//	case 'e':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, eTex.bottomLeft, eTex.topRight, tex));
+		//		break;
+		//	case 'f':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, fTex.bottomLeft, fTex.topRight, tex));
+		//		break;
+		//	case 'g':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, gTex.bottomLeft, gTex.topRight, tex));
+		//		break;
+		//	case 'h':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, hTex.bottomLeft, hTex.topRight, tex));
+		//		break;
+		//	case 'i':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, iTex.bottomLeft, iTex.topRight, tex));
+		//		break;
+		//	case 'j':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, jTex.bottomLeft, jTex.topRight, tex));
+		//		break;
+		//	case 'k':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, kTex.bottomLeft, kTex.topRight, tex));
+		//		break;
+		//	case 'l':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, lTex.bottomLeft, lTex.topRight, tex));
+		//		break;
+		//	case 'm':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, mTex.bottomLeft, mTex.topRight, tex));
+		//		break;
+		//	case 'n':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, nTex.bottomLeft, nTex.topRight, tex));
+		//		break;
+		//	case 'o':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, oTex.bottomLeft, oTex.topRight, tex));
+		//		break;
+		//	case 'p':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, pTex.bottomLeft, pTex.topRight, tex));
+		//		break;
+		//	case 'q':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, qTex.bottomLeft, qTex.topRight, tex));
+		//		break;
+		//	case 'r':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, rTex.bottomLeft, rTex.topRight, tex));
+		//		break;
+		//	case 's':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, sTex.bottomLeft, sTex.topRight, tex));
+		//		break;
+		//	case 't':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, tTex.bottomLeft, tTex.topRight, tex));
+		//		break;
+		//	case 'u':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, uTex.bottomLeft, uTex.topRight, tex));
+		//		break;
+		//	case 'v':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, vTex.bottomLeft, vTex.topRight, tex));
+		//		break;
+		//	case 'w':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, wTex.bottomLeft, wTex.topRight, tex));
+		//		break;
+		//	case 'x':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, xTex.bottomLeft, xTex.topRight, tex));
+		//		break;
+		//	case 'y':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, yTex.bottomLeft, yTex.topRight, tex));
+		//		break;
+		//	case 'z':
+		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, zTex.bottomLeft, zTex.topRight, tex));
+		//		break;
+		//	default:
+		//		printf("unrecognized character: %c\n", letter);
+		//		break;
+		//	}
+		//}
+		Object a = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.003f, aTex.bottomLeft, aTex.topRight, lettersTex);
+		//Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -362,10 +499,14 @@ int main(void)
 		explosionTimer.Start();
 		Timer explosionSpriteTimer = Timer(0.1f);
 		explosionSpriteTimer.Start();
+		Timer steamTimer = Timer(0.4f);
+		steamTimer.Start();
+		Timer steamSpriteTimer = Timer(0.1f);
+		steamSpriteTimer.Start();
 		Timer lungeTimer = Timer(2.5f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		float scoreMultiplier = 1.0f;
-		int score = 0.0f;
+		int score = 0;
 		int lives = 3;
 		double lastTime = glfwGetTime();
 		double deltaT = 0, nowTime = 0;
@@ -382,7 +523,8 @@ int main(void)
 		bool cursorEnabled = false;
 		bool shootingEnabled = false;
 		bool exploding = false;
-		unsigned int actNumber = 0;
+		bool steaming = false;
+		int actNumber = -1;
 		movementSpeed = 0.01f;
 		movementEnabled = true;
 		flyEnabled = true;
@@ -410,6 +552,62 @@ int main(void)
 
 			float deltaTime = (float)deltaT * timeConstant;
 			
+			// Title screen
+			if (actNumber == -1) {
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+				if (leftClicked) {
+					if (startButton.IsPointInside(cursor.GetTranslation()).GetDoesIntersect()) {
+						actNumber = 0;
+						score = 0;
+						lives = 3;
+						lungeReady = true;
+						movementEnabled = true;
+						clickingEnabled = true;
+						zoomEnabled = true;
+						gameOver = false;
+						shot = false;
+						midair = false;
+						submitAmmoRender = false;
+						flyEnabled = false;
+						lungeEnabled = false;
+						cursorEnabled = false;
+						shootingEnabled = false;
+						exploding = false;
+						steaming = false;
+						movementSpeed = 0.01f;
+						movementEnabled = true;
+						flyEnabled = true;
+						lungeEnabled = false;
+						cursorEnabled = false;
+						shootingEnabled = false;
+						scoreMultiplier = 5.0f;
+					}
+				}
+				camera.Translate3f(0.0f, 0.0f, 5.0f);
+				glm::vec3 camPos = camera.GetTranslation();
+				///////////////////////////////////////////////////////////////////////////
+				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
+				glm::mat4 projectionMatrix;
+				if (currentWidth > 0 && currentHeight > 0) {
+					projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 150.0f);
+				}				
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submitForceRender(&startButton);
+				///////////////////////////////////////////////////////////////////////////
+		
+				//sentence1.SubmitForceRender(renderer);
+				//renderer.submitForceRender(&a);
+				sentence.SubmitForceRender(renderer);
+				//renderer.submitForceRender(&a);
+				////////////////////////////////////////////////////////////////////////////
+				cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
+				renderer.submitForceRender(&cursor);
+				///////////////////////////////////////////////////////////////////////////
+				renderer.flush(viewMatrix, projectionMatrix);
+				///////////////////////////////////////////////////////////////////////////
+			}
+
 			// Yanni first act
 			if (actNumber == 0) {
 				///////////////////////////////////////////////////////////////////////////
@@ -524,8 +722,9 @@ int main(void)
 						anyDisplayed = true;
 					}
 				}
+				///////////////////////////////////////////////////////////////////////////
 				// FIND ME 1
-				if (!!anyDisplayed) {
+				if (!anyDisplayed) {
 					actNumber = 1;
 					movementSpeed = 0.05f;
 					shootSpeed = 15.0f;
@@ -539,13 +738,6 @@ int main(void)
 					planet.Scale3f(1.0f, 1.0f, 1.0f);
 					planet.Translate3f(0.0f, 0.0f, 0.0f);
 					camera.Translate3f(0.0f, 1.0f, 5.0f);
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					// SET ALL ACT 2 VALUES HERE
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				}
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&planet, camPos);
@@ -595,15 +787,6 @@ int main(void)
 					projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 150.0f);
 				}
 				///////////////////////////////////////////////////////////////////////////
-				for (unsigned int i = 0; i < pools.size(); i++) {
-					if (pools[i].GetDoesIntersect(lavaOne).GetDoesIntersect() || pools[i].GetDoesIntersect(lavaTwo).GetDoesIntersect()) {
-						pools[i].SetIsDisplayed(false);
-					}
-					if (pools[i].GetTranslation().y < -10) {
-						pools[i].SetIsDisplayed(false);
-					}
-				}
-				///////////////////////////////////////////////////////////////////////////
 				renderer.submitForceRender(&volcanoBackground);
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&volcanoOne, camPos);
@@ -612,6 +795,18 @@ int main(void)
 				bool anyDisplayed = false;
 				for (unsigned int i = 0; i < pools.size(); i++) {
 					if (pools[i].IsDisplayed()) {
+						if (pools[i].GetDoesIntersect(lavaOne).GetDoesIntersect() || pools[i].GetDoesIntersect(lavaTwo).GetDoesIntersect()) {
+							pools[i].SetIsDisplayed(false);
+							steaming = true;
+							steam.TranslateVec3(pools[i].GetTranslation());
+							steamTimer.Reset(0.4f);
+							steamTimer.Start();
+							steamSpriteTimer.Reset(0.1f);
+							steamSpriteTimer.Start();
+						}
+						if (pools[i].GetTranslation().y < -10) {
+							pools[i].SetIsDisplayed(false);
+						}
 						pools[i].Update(deltaTime);
 						renderer.submit(&pools[i], camPos);
 						anyDisplayed = true;
@@ -619,7 +814,7 @@ int main(void)
 				}
 				///////////////////////////////////////////////////////////////////////////
 				// FIND ME 2
-				if (!!anyDisplayed) {
+				if (!anyDisplayed) {
 					actNumber = 2;
 					cursorEnabled = true;
 					shootingEnabled = true;
@@ -645,6 +840,22 @@ int main(void)
 				renderer.submit(&lavaOne, camPos);
 				renderer.submit(&lavaTwo, camPos);
 				///////////////////////////////////////////////////////////////////////////
+
+				if (steaming) {
+					renderer.submit(&steam, camPos);
+					steamTimer.ElapseTime(deltaTime);
+					steamSpriteTimer.ElapseTime(deltaTime);
+					if (steamSpriteTimer.HasFinished()) {
+						steam.Play(frames, 4);
+						steamSpriteTimer.Reset(0.1f);
+						steamSpriteTimer.Start();
+					}
+					if (steamTimer.HasFinished()) {
+						steaming = false;
+						steamTimer.Reset(0.4f);
+						steamTimer.Start();
+					}
+				}
 
 				renderer.flush(viewMatrix, projectionMatrix);
 			}
@@ -737,8 +948,8 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&satellite, camPos);
 				///////////////////////////////////////////////////////////////////////////
-				planet.Translate3f(-3.0f, 0.0f, 0.0f);
-				planet.Scale3f(5.0f, 5.0f, 5.0f);
+				planet.Translate3f(-4.0f, 0.0f, 0.0f);
+				planet.Scale3f(7.5f, 7.5f, 7.5f);
 				planetSpriteTimer.ElapseTime(deltaTime);
 				if (planetSpriteTimer.HasFinished()) {
 					planet.Play(frames, 4);
@@ -809,6 +1020,7 @@ int main(void)
 				// FIND ME 3
 				if (!anyDisplayed || lives == 0) {
 					actNumber = 3;
+					lives = 3;
 				}
 				meteorSpriteTimer.ElapseTime(deltaTime);
 				if (meteorSpriteTimer.HasFinished()) {
@@ -839,6 +1051,86 @@ int main(void)
 				if (cursorEnabled) {
 					cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
 					renderer.submitForceRender(&cursor);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.flush(viewMatrix, projectionMatrix);
+				///////////////////////////////////////////////////////////////////////////
+			}
+			// Mark second act
+			if (actNumber == 3) {
+				///////////////////////////////////////////////////////////////////////////
+				camera.ChangeMovementSpeed(movementSpeed);
+				camera.Translate3f(0.0f, 0.0f, 5.0f);
+				glm::vec3 camPos = camera.GetTranslation();
+				///////////////////////////////////////////////////////////////////////////
+				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
+				glm::mat4 projectionMatrix;
+				if (currentWidth > 0 && currentHeight > 0) {
+					projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 150.0f);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submitForceRender(&background);
+				///////////////////////////////////////////////////////////////////////////
+				planet.Translate3f(-4.0f, 0.0f, 0.0f);
+				planet.Scale3f(7.5f, 7.5f, 7.5f);
+				planetSpriteTimer.ElapseTime(deltaTime);
+				if (planetSpriteTimer.HasFinished()) {
+					planet.Play(frames, 4);
+					planetSpriteTimer.Reset(0.5f);
+					planetSpriteTimer.Start();
+				}
+				renderer.submit(&planet, camPos);
+				///////////////////////////////////////////////////////////////////////////
+				bool anyDisplayed = false;
+				for (unsigned int i = 0; i < secondIncomingMeteors.size(); i++) {
+					if (secondIncomingMeteors[i].IsDisplayed()) {
+						if (secondIncomingMeteors[i].GetDoesIntersect(planet).GetDoesIntersect()) {
+							secondIncomingMeteors[i].SetIsDisplayed(false);
+							engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							exploding = true;
+							explosion.TranslateVec3(secondIncomingMeteors[i].GetTranslation());
+							explosionTimer.Reset(0.4f);
+							explosionTimer.Start();
+							explosionSpriteTimer.Reset(0.1f);
+							explosionSpriteTimer.Start();
+							lives--;
+						}
+						else if (!(secondIncomingMeteors[i].GetTranslation().x > -25.0f)) {
+							secondIncomingMeteors[i].SetIsDisplayed(false);
+						}
+						secondIncomingMeteors[i].Update(deltaTime);
+						renderer.submit(&secondIncomingMeteors[i], camPos);
+						anyDisplayed = true;
+					}
+				}
+				// FIND ME 4
+				if (!anyDisplayed || lives == -17) {
+					actNumber = 4;
+				}
+				meteorSpriteTimer.ElapseTime(deltaTime);
+				if (meteorSpriteTimer.HasFinished()) {
+					for (unsigned int i = 0; i < secondIncomingMeteors.size(); i++) {
+						if (secondIncomingMeteors[i].IsDisplayed()) {
+							secondIncomingMeteors[i].Play(frames, 4);
+						}
+					}
+					meteorSpriteTimer.Reset(0.5f);
+					meteorSpriteTimer.Start();
+				}
+				if (exploding) {
+					renderer.submit(&explosion, camPos);
+					explosionTimer.ElapseTime(deltaTime);
+					explosionSpriteTimer.ElapseTime(deltaTime);
+					if (explosionSpriteTimer.HasFinished()) {
+						explosion.Play(frames, 4);
+						explosionSpriteTimer.Reset(0.1f);
+						explosionSpriteTimer.Start();
+					}
+					if (explosionTimer.HasFinished()) {
+						exploding = false;
+						explosionTimer.Reset(0.4f);
+						explosionTimer.Start();
+					}
 				}
 				///////////////////////////////////////////////////////////////////////////
 				renderer.flush(viewMatrix, projectionMatrix);

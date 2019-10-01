@@ -16,6 +16,7 @@ public:
 
 	IntersectData IntersectCollidableSprite(const CollidableSprite& other);
 	IntersectData GetDoesIntersect(const CollidableSprite& other);
+	IntersectData IsPointInside(const glm::vec3& point);
 
 	bool UpdateCollision(float deltaT, const std::vector<CollidableSprite>& vect);
 
