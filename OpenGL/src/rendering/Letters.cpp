@@ -6,21 +6,18 @@ Letters::Letters()
 
 }
 
-Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, glm::vec2 max)
+Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, glm::vec2 max, glm::vec3 trans)
 {
 	int valuesPerLine = sentence.size() / lines;
 	float incrementX = (max.x - min.x) / valuesPerLine;
 	float incrementY = (max.y - min.y) / lines;
-	printf("incrementX: %f\nincrementY: %f\n", incrementX, incrementY);
 	int incrementXTimes = 0;
 	int incrementYTimes = 0;
 	glm::vec2 firstPos = glm::vec2(min.x, max.y);
 	float deltaX = max.x - min.x;
 	float deltaY = max.y - min.y;
-	printf("deltaX: %f\ndeltaY: %f\n", deltaX, deltaY);
-	float sizeX = deltaX * (incrementX/2);
-	float sizeY = deltaY * (incrementY/2);
-	printf("sizeX: %f\nsizeY: %f\n", sizeX, sizeY);
+	float sizeX = incrementX;
+	float sizeY = incrementY;
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
@@ -94,6 +91,30 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
+	texCoords spaceTex = Loader::getImageCoordinates(4, 9, 5, 10, 8, 16);
+	texCoords oneTex = Loader::getImageCoordinates(0, 8, 1, 9, 8, 16);
+	texCoords twoTex = Loader::getImageCoordinates(1, 8, 2, 9, 8, 16);
+	texCoords threeTex = Loader::getImageCoordinates(2, 8, 3, 9, 8, 16);
+	texCoords fourTex = Loader::getImageCoordinates(3, 8, 4, 9, 8, 16);
+	texCoords fiveTex = Loader::getImageCoordinates(4, 8, 5, 9, 8, 16);
+	texCoords sixTex = Loader::getImageCoordinates(5, 8, 6, 9, 8, 16);
+	texCoords sevenTex = Loader::getImageCoordinates(6, 8, 7, 9, 8, 16);
+	texCoords eightTex = Loader::getImageCoordinates(7, 8, 8, 9, 8, 16);
+	texCoords nineTex = Loader::getImageCoordinates(0, 7, 1, 8, 8, 16);
+	texCoords zeroTex = Loader::getImageCoordinates(1, 7, 2, 8, 8, 16);
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	texCoords periodTex = Loader::getImageCoordinates(3, 5, 4, 6, 8, 16);
+	texCoords commaTex = Loader::getImageCoordinates(4, 5, 5, 6, 8, 16);
+	texCoords exclamationMarkTex = Loader::getImageCoordinates(2, 7, 3, 8, 8, 16);
+	texCoords questionMarkTex = Loader::getImageCoordinates(3, 3, 4, 4, 8, 16);
+	texCoords dashTex = Loader::getImageCoordinates(4, 6, 5, 7, 8, 16);
+	texCoords openParenthesesTex = Loader::getImageCoordinates(2, 6, 3, 7, 8, 16);
+	texCoords closeParenthesesTex = Loader::getImageCoordinates(3, 6, 4, 7, 8, 16);
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
 	for (unsigned int i = 0; i < sentence.size(); i++) {
 		if (i % valuesPerLine == 0) {
 			incrementYTimes++;
@@ -103,163 +124,217 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 			incrementXTimes++;
 		}
 		char letter = sentence[i];
-		glm::vec3 pos = glm::vec3(firstPos.x + incrementX * incrementXTimes, firstPos.y - incrementY * incrementYTimes, 0.0f);
+		glm::vec3 pos = glm::vec3(firstPos.x + incrementX * incrementXTimes, firstPos.y - incrementY * incrementYTimes, 0.0f) + trans;
 		switch (letter) {
 		case 'a':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, aTex.bottomLeft, aTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, aTex.bottomLeft, aTex.topRight, tex));
 			break;
 		case 'b':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, bTex.bottomLeft, bTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, bTex.bottomLeft, bTex.topRight, tex));
 			break;
 		case 'c':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, cTex.bottomLeft, cTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, cTex.bottomLeft, cTex.topRight, tex));
 			break;
 		case 'd':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, dTex.bottomLeft, dTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, dTex.bottomLeft, dTex.topRight, tex));
 			break;
 		case 'e':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, eTex.bottomLeft, eTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, eTex.bottomLeft, eTex.topRight, tex));
 			break;
 		case 'f':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, fTex.bottomLeft, fTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, fTex.bottomLeft, fTex.topRight, tex));
 			break;
 		case 'g':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, gTex.bottomLeft, gTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, gTex.bottomLeft, gTex.topRight, tex));
 			break;
 		case 'h':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, hTex.bottomLeft, hTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, hTex.bottomLeft, hTex.topRight, tex));
 			break;
 		case 'i':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, iTex.bottomLeft, iTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, iTex.bottomLeft, iTex.topRight, tex));
 			break;
 		case 'j':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, jTex.bottomLeft, jTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, jTex.bottomLeft, jTex.topRight, tex));
 			break;
 		case 'k':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, kTex.bottomLeft, kTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, kTex.bottomLeft, kTex.topRight, tex));
 			break;
 		case 'l':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, lTex.bottomLeft, lTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, lTex.bottomLeft, lTex.topRight, tex));
 			break;
 		case 'm':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, mTex.bottomLeft, mTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, mTex.bottomLeft, mTex.topRight, tex));
 			break;
 		case 'n':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, nTex.bottomLeft, nTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, nTex.bottomLeft, nTex.topRight, tex));
 			break;
 		case 'o':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, oTex.bottomLeft, oTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, oTex.bottomLeft, oTex.topRight, tex));
 			break;
 		case 'p':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, pTex.bottomLeft, pTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, pTex.bottomLeft, pTex.topRight, tex));
 			break;
 		case 'q':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, qTex.bottomLeft, qTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, qTex.bottomLeft, qTex.topRight, tex));
 			break;
 		case 'r':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, rTex.bottomLeft, rTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, rTex.bottomLeft, rTex.topRight, tex));
 			break;
 		case 's':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, sTex.bottomLeft, sTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, sTex.bottomLeft, sTex.topRight, tex));
 			break;
 		case 't':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, tTex.bottomLeft, tTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, tTex.bottomLeft, tTex.topRight, tex));
 			break;
 		case 'u':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, uTex.bottomLeft, uTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, uTex.bottomLeft, uTex.topRight, tex));
 			break;
 		case 'v':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, vTex.bottomLeft, vTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, vTex.bottomLeft, vTex.topRight, tex));
 			break;
 		case 'w':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, wTex.bottomLeft, wTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, wTex.bottomLeft, wTex.topRight, tex));
 			break;
 		case 'x':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, xTex.bottomLeft, xTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, xTex.bottomLeft, xTex.topRight, tex));
 			break;
 		case 'y':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, yTex.bottomLeft, yTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, yTex.bottomLeft, yTex.topRight, tex));
 			break;
 		case 'z':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, zTex.bottomLeft, zTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, zTex.bottomLeft, zTex.topRight, tex));
 			break;
 		case 'A':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, ATex.bottomLeft, ATex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, ATex.bottomLeft, ATex.topRight, tex));
 			break;
 		case 'B':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, BTex.bottomLeft, BTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, BTex.bottomLeft, BTex.topRight, tex));
 			break;
 		case 'C':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, CTex.bottomLeft, CTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, CTex.bottomLeft, CTex.topRight, tex));
 			break;
 		case 'D':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, DTex.bottomLeft, DTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, DTex.bottomLeft, DTex.topRight, tex));
 			break;
 		case 'E':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, ETex.bottomLeft, ETex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, ETex.bottomLeft, ETex.topRight, tex));
 			break;
 		case 'F':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, FTex.bottomLeft, FTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, FTex.bottomLeft, FTex.topRight, tex));
 			break;
 		case 'G':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, GTex.bottomLeft, GTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, GTex.bottomLeft, GTex.topRight, tex));
 			break;
 		case 'H':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, HTex.bottomLeft, HTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, HTex.bottomLeft, HTex.topRight, tex));
 			break;
 		case 'I':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, ITex.bottomLeft, ITex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, ITex.bottomLeft, ITex.topRight, tex));
 			break;
 		case 'J':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, JTex.bottomLeft, JTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, JTex.bottomLeft, JTex.topRight, tex));
 			break;
 		case 'K':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, KTex.bottomLeft, KTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, KTex.bottomLeft, KTex.topRight, tex));
 			break;
 		case 'L':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, LTex.bottomLeft, LTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, LTex.bottomLeft, LTex.topRight, tex));
 			break;
 		case 'M':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, MTex.bottomLeft, MTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, MTex.bottomLeft, MTex.topRight, tex));
 			break;
 		case 'N':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, NTex.bottomLeft, NTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, NTex.bottomLeft, NTex.topRight, tex));
 			break;
 		case 'O':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, OTex.bottomLeft, OTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, OTex.bottomLeft, OTex.topRight, tex));
 			break;
 		case 'P':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, PTex.bottomLeft, PTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, PTex.bottomLeft, PTex.topRight, tex));
 			break;
 		case 'Q':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, QTex.bottomLeft, QTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, QTex.bottomLeft, QTex.topRight, tex));
 			break;
 		case 'R':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, RTex.bottomLeft, RTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, RTex.bottomLeft, RTex.topRight, tex));
 			break;
 		case 'S':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, STex.bottomLeft, STex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, STex.bottomLeft, STex.topRight, tex));
 			break;
 		case 'T':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, TTex.bottomLeft, TTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, TTex.bottomLeft, TTex.topRight, tex));
 			break;
 		case 'U':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, UTex.bottomLeft, UTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, UTex.bottomLeft, UTex.topRight, tex));
 			break;
 		case 'V':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, VTex.bottomLeft, VTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, VTex.bottomLeft, VTex.topRight, tex));
 			break;
 		case 'W':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, WTex.bottomLeft, WTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, WTex.bottomLeft, WTex.topRight, tex));;
 			break;
 		case 'X':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, XTex.bottomLeft, XTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, XTex.bottomLeft, XTex.topRight, tex));
 			break;
 		case 'Y':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, YTex.bottomLeft, YTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, YTex.bottomLeft, YTex.topRight, tex));
 			break;
 		case 'Z':
-			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), glm::vec2(-sizeX/2, -sizeY/2), glm::vec2(sizeX/2, sizeY/2), 0.004f, ZTex.bottomLeft, ZTex.topRight, tex));
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, ZTex.bottomLeft, ZTex.topRight, tex));
+			break;
+		case ' ':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, spaceTex.bottomLeft, spaceTex.topRight, tex));
+			break;
+		case '.':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, periodTex.bottomLeft, periodTex.topRight, tex));
+			break;
+		case ',':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, commaTex.bottomLeft, commaTex.topRight, tex));
+			break;
+		case '!':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, exclamationMarkTex.bottomLeft, exclamationMarkTex.topRight, tex));
+			break;
+		case '?':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, questionMarkTex.bottomLeft, questionMarkTex.topRight, tex));
+			break;
+		case '-':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, dashTex.bottomLeft, dashTex.topRight, tex));
+			break;
+		case '(':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, openParenthesesTex.bottomLeft, openParenthesesTex.topRight, tex));
+			break;
+		case ')':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, closeParenthesesTex.bottomLeft, closeParenthesesTex.topRight, tex));
+			break;
+		case '0':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, zeroTex.bottomLeft, zeroTex.topRight, tex));
+			break;
+		case '1':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, oneTex.bottomLeft, oneTex.topRight, tex));
+			break;
+		case '2':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, twoTex.bottomLeft, twoTex.topRight, tex));
+			break;
+		case '3':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, threeTex.bottomLeft, threeTex.topRight, tex));
+			break;
+		case '4':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, fourTex.bottomLeft, fourTex.topRight, tex));
+			break;
+		case '5':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, fiveTex.bottomLeft, fiveTex.topRight, tex));
+			break;
+		case '6':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, sixTex.bottomLeft, sixTex.topRight, tex));
+			break;
+		case '7':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, sevenTex.bottomLeft, sevenTex.topRight, tex));
+			break;
+		case '8':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, eightTex.bottomLeft, eightTex.topRight, tex));
+			break;
+		case '9':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, nineTex.bottomLeft, nineTex.topRight, tex));
 			break;
 		default:
 			printf("unrecognized character: %c\n", letter);
@@ -267,6 +342,7 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 		}
 	}
 }
+
 
 void Letters::SubmitForceRender(Simple2DRenderer& renderer)
 {

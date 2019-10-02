@@ -253,7 +253,7 @@ int main(void)
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint spaceBckgrnd = Loader::loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = Loader::loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
-		GLuint lettersTex = Loader::loadSpriteSheet("res/images/other/", "Letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint lettersTex = Loader::loadSpriteSheet("res/images/other/", "letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		texCoords cursorCoords = Loader::getImageCoordinates(15, 15, 16, 16, 16, 16);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		Object volcanoBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
@@ -312,172 +312,16 @@ int main(void)
 		texCoords steamTexCoords = Loader::getImageCoordinates(0, 8, 1, 9, 16, 16);
 		Sprite steam = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.003f, steamTexCoords.bottomLeft, steamTexCoords.topRight, frames[0], 0);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		GLuint blankTex = 0;
-		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blankTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		GLuint blackTex = 0;
+		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blackTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		Letters sentence = Letters("hellothisisatest", lettersTex, 2, glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f));
-		//std::string sentence = "hello";
-		//std::vector<Object> letters;
-		//int lines = 1;
-		//GLuint tex = lettersTex;
+		Letters startButtonTex = Letters("Start", lettersTex, 1, glm::vec2(-1.2f, -0.4f), glm::vec2(1.2f, 0.4f), glm::vec3(0.25f, 0.5f, 0.0f));
 		////////////////////////////////////////////////////////////////////
 		texCoords aTex = Loader::getImageCoordinates(0, 15, 1, 16, 8, 16);
-		//texCoords bTex = Loader::getImageCoordinates(2, 15, 3, 16, 8, 16);
-		//texCoords cTex = Loader::getImageCoordinates(4, 15, 5, 16, 8, 16);
-		//texCoords dTex = Loader::getImageCoordinates(6, 15, 7, 16, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords eTex = Loader::getImageCoordinates(0, 14, 1, 15, 8, 16);
-		//texCoords fTex = Loader::getImageCoordinates(2, 14, 3, 15, 8, 16);
-		//texCoords gTex = Loader::getImageCoordinates(4, 14, 5, 15, 8, 16);
-		//texCoords hTex = Loader::getImageCoordinates(6, 14, 7, 15, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords iTex = Loader::getImageCoordinates(0, 13, 1, 14, 8, 16);
-		//texCoords jTex = Loader::getImageCoordinates(2, 13, 3, 14, 8, 16);
-		//texCoords kTex = Loader::getImageCoordinates(4, 13, 5, 14, 8, 16);
-		//texCoords lTex = Loader::getImageCoordinates(6, 13, 7, 14, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords mTex = Loader::getImageCoordinates(0, 12, 1, 13, 8, 16);
-		//texCoords nTex = Loader::getImageCoordinates(2, 12, 3, 13, 8, 16);
-		//texCoords oTex = Loader::getImageCoordinates(4, 12, 5, 13, 8, 16);
-		//texCoords pTex = Loader::getImageCoordinates(6, 12, 7, 13, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords qTex = Loader::getImageCoordinates(0, 11, 1, 12, 8, 16);
-		//texCoords rTex = Loader::getImageCoordinates(2, 11, 3, 12, 8, 16);
-		//texCoords sTex = Loader::getImageCoordinates(4, 11, 5, 12, 8, 16);
-		//texCoords tTex = Loader::getImageCoordinates(6, 11, 7, 12, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords uTex = Loader::getImageCoordinates(0, 10, 1, 11, 8, 16);
-		//texCoords vTex = Loader::getImageCoordinates(2, 10, 3, 11, 8, 16);
-		//texCoords wTex = Loader::getImageCoordinates(4, 10, 5, 11, 8, 16);
-		//texCoords xTex = Loader::getImageCoordinates(6, 10, 7, 11, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords yTex = Loader::getImageCoordinates(0, 9, 1, 10, 8, 16);
-		//texCoords zTex = Loader::getImageCoordinates(2, 9, 3, 10, 8, 16);
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
-		//texCoords ATex = Loader::getImageCoordinates(1, 15, 2, 16, 8, 16);
-		//texCoords BTex = Loader::getImageCoordinates(3, 15, 4, 16, 8, 16);
-		//texCoords CTex = Loader::getImageCoordinates(5, 15, 6, 16, 8, 16);
-		//texCoords DTex = Loader::getImageCoordinates(7, 15, 8, 16, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords ETex = Loader::getImageCoordinates(1, 14, 2, 15, 8, 16);
-		//texCoords FTex = Loader::getImageCoordinates(3, 14, 4, 15, 8, 16);
-		//texCoords GTex = Loader::getImageCoordinates(5, 14, 6, 15, 8, 16);
-		//texCoords HTex = Loader::getImageCoordinates(7, 14, 8, 15, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords ITex = Loader::getImageCoordinates(1, 13, 2, 14, 8, 16);
-		//texCoords JTex = Loader::getImageCoordinates(3, 13, 4, 14, 8, 16);
-		//texCoords KTex = Loader::getImageCoordinates(5, 13, 6, 14, 8, 16);
-		//texCoords LTex = Loader::getImageCoordinates(7, 13, 8, 14, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords MTex = Loader::getImageCoordinates(1, 12, 2, 13, 8, 16);
-		//texCoords NTex = Loader::getImageCoordinates(3, 12, 4, 13, 8, 16);
-		//texCoords OTex = Loader::getImageCoordinates(5, 12, 6, 13, 8, 16);
-		//texCoords PTex = Loader::getImageCoordinates(7, 12, 8, 13, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords QTex = Loader::getImageCoordinates(1, 11, 2, 12, 8, 16);
-		//texCoords RTex = Loader::getImageCoordinates(3, 11, 4, 12, 8, 16);
-		//texCoords STex = Loader::getImageCoordinates(5, 11, 6, 12, 8, 16);
-		//texCoords TTex = Loader::getImageCoordinates(7, 11, 8, 12, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords UTex = Loader::getImageCoordinates(1, 10, 2, 11, 8, 16);
-		//texCoords VTex = Loader::getImageCoordinates(3, 10, 4, 11, 8, 16);
-		//texCoords WTex = Loader::getImageCoordinates(5, 10, 6, 11, 8, 16);
-		//texCoords XTex = Loader::getImageCoordinates(7, 10, 8, 11, 8, 16);
-		////////////////////////////////////////////////////////////////////
-		//texCoords YTex = Loader::getImageCoordinates(1, 9, 2, 10, 8, 16);
-		//texCoords ZTex = Loader::getImageCoordinates(3, 9, 4, 10, 8, 16);
-		////////////////////////////////////////////////////////////////////
-
-		//for (unsigned int i = 0; i < sentence.size(); i++) {
-		//	char letter = sentence[i];
-		//	switch (letter) {
-		//	case 'a':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, aTex.bottomLeft, aTex.topRight, tex));
-		//		break;
-		//	case 'b':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, bTex.bottomLeft, bTex.topRight, tex));
-		//		break;
-		//	case 'c':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, cTex.bottomLeft, cTex.topRight, tex));
-		//		break;
-		//	case 'd':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, dTex.bottomLeft, dTex.topRight, tex));
-		//		break;
-		//	case 'e':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, eTex.bottomLeft, eTex.topRight, tex));
-		//		break;
-		//	case 'f':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, fTex.bottomLeft, fTex.topRight, tex));
-		//		break;
-		//	case 'g':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, gTex.bottomLeft, gTex.topRight, tex));
-		//		break;
-		//	case 'h':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, hTex.bottomLeft, hTex.topRight, tex));
-		//		break;
-		//	case 'i':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, iTex.bottomLeft, iTex.topRight, tex));
-		//		break;
-		//	case 'j':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, jTex.bottomLeft, jTex.topRight, tex));
-		//		break;
-		//	case 'k':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, kTex.bottomLeft, kTex.topRight, tex));
-		//		break;
-		//	case 'l':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, lTex.bottomLeft, lTex.topRight, tex));
-		//		break;
-		//	case 'm':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, mTex.bottomLeft, mTex.topRight, tex));
-		//		break;
-		//	case 'n':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, nTex.bottomLeft, nTex.topRight, tex));
-		//		break;
-		//	case 'o':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, oTex.bottomLeft, oTex.topRight, tex));
-		//		break;
-		//	case 'p':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, pTex.bottomLeft, pTex.topRight, tex));
-		//		break;
-		//	case 'q':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, qTex.bottomLeft, qTex.topRight, tex));
-		//		break;
-		//	case 'r':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, rTex.bottomLeft, rTex.topRight, tex));
-		//		break;
-		//	case 's':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, sTex.bottomLeft, sTex.topRight, tex));
-		//		break;
-		//	case 't':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, tTex.bottomLeft, tTex.topRight, tex));
-		//		break;
-		//	case 'u':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, uTex.bottomLeft, uTex.topRight, tex));
-		//		break;
-		//	case 'v':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, vTex.bottomLeft, vTex.topRight, tex));
-		//		break;
-		//	case 'w':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, wTex.bottomLeft, wTex.topRight, tex));
-		//		break;
-		//	case 'x':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, xTex.bottomLeft, xTex.topRight, tex));
-		//		break;
-		//	case 'y':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, yTex.bottomLeft, yTex.topRight, tex));
-		//		break;
-		//	case 'z':
-		//		letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.004f, zTex.bottomLeft, zTex.topRight, tex));
-		//		break;
-		//	default:
-		//		printf("unrecognized character: %c\n", letter);
-		//		break;
-		//	}
-		//}
 		Object a = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.003f, aTex.bottomLeft, aTex.topRight, lettersTex);
-		//Object(type type, glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 collisionMinExtent, glm::vec2 collisionMaxExtent, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -554,7 +398,7 @@ int main(void)
 			
 			// Title screen
 			if (actNumber == -1) {
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 				glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 				if (leftClicked) {
 					if (startButton.IsPointInside(cursor.GetTranslation()).GetDoesIntersect()) {
@@ -598,7 +442,7 @@ int main(void)
 		
 				//sentence1.SubmitForceRender(renderer);
 				//renderer.submitForceRender(&a);
-				sentence.SubmitForceRender(renderer);
+				startButtonTex.SubmitForceRender(renderer);
 				//renderer.submitForceRender(&a);
 				////////////////////////////////////////////////////////////////////////////
 				cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
