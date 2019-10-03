@@ -14,11 +14,13 @@ public:
 	CollidableSprite(glm::vec3 rot, glm::vec3 trans, glm::vec3 scle, glm::vec2 collisionMinExtents, glm::vec2 collisionMaxExtents, glm::vec2 minExtents, glm::vec2 maxExtents, float z, glm::vec2 bottomLeftTexCoord, glm::vec2 topRightTexCoord, GLuint& tex, GLuint startingFrame, float m, glm::vec3 linearVel, glm::vec3 angularVel, glm::vec3 f, glm::vec3 t, float MOI, glm::vec3 gravity, float COR);
 	~CollidableSprite();
 
+	IntersectData IntersectCollidableSpriteFromSide(const CollidableSprite& other);
+	IntersectData IntersectCollidableSpriteFromTopBottom(const CollidableSprite& other);
 	IntersectData IntersectCollidableSprite(const CollidableSprite& other);
 	IntersectData GetDoesIntersect(const CollidableSprite& other);
 	IntersectData IsPointInside(const glm::vec3& point);
 
-	bool UpdateCollision(float deltaT, const std::vector<CollidableSprite>& vect);
+	bool UpdateCollision(float deltaT, const std::vector<CollidableSprite>& vect, bool aPressed, bool dPressed);
 
 	bool GetCanJump();
 	void SetCanJump(bool newValue);
