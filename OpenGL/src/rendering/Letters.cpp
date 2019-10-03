@@ -112,19 +112,15 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 	texCoords dashTex = Loader::getImageCoordinates(4, 6, 5, 7, 8, 16);
 	texCoords openParenthesesTex = Loader::getImageCoordinates(2, 6, 3, 7, 8, 16);
 	texCoords closeParenthesesTex = Loader::getImageCoordinates(3, 6, 4, 7, 8, 16);
+	texCoords colonTex = Loader::getImageCoordinates(6, 4, 7, 5, 8, 16);
+	texCoords semiColonTex = Loader::getImageCoordinates(7, 5, 8, 6, 8, 16);
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
 	for (unsigned int i = 0; i < sentence.size(); i++) {
-		if (i % valuesPerLine == 0) {
-			incrementYTimes++;
-			incrementXTimes = 0;
-		}
-		else {
-			incrementXTimes++;
-		}
 		char letter = sentence[i];
 		glm::vec3 pos = glm::vec3(firstPos.x + incrementX * incrementXTimes, firstPos.y - incrementY * incrementYTimes, 0.0f) + trans;
+		translations.push_back(pos);
 		switch (letter) {
 		case 'a':
 			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, aTex.bottomLeft, aTex.topRight, tex));
@@ -306,6 +302,12 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 		case ')':
 			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, closeParenthesesTex.bottomLeft, closeParenthesesTex.topRight, tex));
 			break;
+		case ';':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, semiColonTex.bottomLeft, semiColonTex.topRight, tex));
+			break;
+		case ':':
+			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, colonTex.bottomLeft, colonTex.topRight, tex));
+			break;
 		case '0':
 			letters.push_back(Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), pos, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), glm::vec2(-sizeX / 2, -sizeY / 2), glm::vec2(sizeX / 2, sizeY / 2), 0.004f, zeroTex.bottomLeft, zeroTex.topRight, tex));
 			break;
@@ -340,14 +342,28 @@ Letters::Letters(std::string sentence, GLuint tex, GLuint lines, glm::vec2 min, 
 			printf("unrecognized character: %c\n", letter);
 			break;
 		}
+		if (i % valuesPerLine == 0 && i != 0) {
+			incrementYTimes++;
+			incrementXTimes = 0;
+		}
+		else {
+			incrementXTimes++;
+		}
 	}
 }
 
+Letters::~Letters()
+{
+
+}
 
 void Letters::SubmitForceRender(Simple2DRenderer& renderer)
 {
 	for (unsigned int i = 0; i < letters.size(); i++) {
-		renderer.submitForceRender(&letters[i]);
+		if (letters[i].IsDisplayed()) {
+			letters[i].TranslateVec3(translations[i] + universalTrans);
+			renderer.submitForceRender(&letters[i]);
+		}
 	}
 }
 
@@ -355,6 +371,7 @@ void Letters::Submit(Simple2DRenderer& renderer, glm::vec3 camPos)
 {
 	for (unsigned int i = 0; i < letters.size(); i++) {
 		if (letters[i].IsDisplayed()) {
+			letters[i].TranslateVec3(translations[i] + universalTrans);
 			renderer.submit(&letters[i], camPos);
 		}
 	}
@@ -367,6 +384,12 @@ void Letters::SetIsDisplayed(bool newValue)
 	}
 }
 
-Letters::~Letters()
+void Letters::TranslateVec3(glm::vec3 translation)
 {
+	universalTrans = translation;
+}
+
+void Letters::TranslateAddVec3(glm::vec3 translation)
+{
+	universalTrans += translation;
 }

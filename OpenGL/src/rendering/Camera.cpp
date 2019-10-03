@@ -64,7 +64,7 @@ void Camera::LookAt(double xpos, double ypos)
 void Camera::MoveForward(float deltaT)
 {
 	if (hasControls) {
-		if (cameraTranslation.z > 1.75f) {
+		if (cameraTranslation.z > 5) {
 			cameraTranslation.z += -(movementSpeed / 0.007777) * deltaT;
 		}
 	}

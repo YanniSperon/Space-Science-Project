@@ -12,7 +12,6 @@
 #include "Camera.h"
 #include "Config.h"
 #include "Object.h"
-#include "Player.h"
 #include "BoundingSphere.h"
 #include "IntersectData.h"
 #include "Plane.h"
@@ -26,6 +25,7 @@
 #include "Generator.h"
 #include "Loader.h"
 #include "Letters.h"
+#include "ScoreDisplay.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -254,17 +254,20 @@ int main(void)
 		GLuint spaceBckgrnd = Loader::loadSpriteSheet("res/images/backgrounds/space/", "background.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint sphereCow = Loader::loadSpriteSheet("res/images/other/", "newcow.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		GLuint lettersTex = Loader::loadSpriteSheet("res/images/other/", "letters.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
+		GLuint lettersOutlined3PXTex = Loader::loadSpriteSheet("res/images/other/", "lettersoutlined3px.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST);
 		texCoords cursorCoords = Loader::getImageCoordinates(15, 15, 16, 16, 16, 16);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		Object volcanoBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
 		CollidableSprite planet = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		texCoords dinoCoords = Loader::getImageCoordinates(14, 0, 16, 1, 16, 16);
+		CollidableSprite dino = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), 0.0f, dinoCoords.bottomLeft, dinoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), spaceBckgrnd);
 		//Object aLetter = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -1.0f), glm::vec2(0.5f, 1.0f), 1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), letters);
 		CollidableSprite cursor = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> ground;
 		for (unsigned int i = 0; i < 100; i++) {
-			ground.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+			ground.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), sphereCow, 0, 1.0f, glm::vec3(-5.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> food;
@@ -315,9 +318,13 @@ int main(void)
 		GLuint blackTex = 0;
 		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blackTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		Letters startButtonTex = Letters("Start", lettersTex, 1, glm::vec2(-1.2f, -0.4f), glm::vec2(1.2f, 0.4f), glm::vec3(0.25f, 0.5f, 0.0f));
+		Letters startButtonText = Letters("Start", lettersTex, 1, glm::vec2(-1.2f, -0.4f), glm::vec2(1.2f, 0.4f), glm::vec3(0.25f, 0.5f, 0.0f));
+		Letters titleScreenText = Letters("Welcome to game", lettersOutlined3PXTex, 1, glm::vec2(-4.2f, -0.4f), glm::vec2(4.2f, 0.4f), glm::vec3(0.25f, 2.0f, 0.0f));
 		////////////////////////////////////////////////////////////////////
 		texCoords aTex = Loader::getImageCoordinates(0, 15, 1, 16, 8, 16);
+		////////////////////////////////////////////////////////////////////
+		Letters scoreLabel = Letters("Score:", lettersOutlined3PXTex, 1, glm::vec2(-1.2f, -0.2f), glm::vec2(1.2f, 0.2f), glm::vec3(5.5f, 3.5f, 0.0f));
+		ScoreDisplay scoreDisplay = ScoreDisplay(glm::vec2(-1.0f, -0.2f), glm::vec2(1.0f, 0.2f), 5, glm::vec3(8.0f, 3.5f, 0.0f), lettersOutlined3PXTex);
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
@@ -331,6 +338,8 @@ int main(void)
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		Timer planetSpriteTimer = Timer(0.5f);
 		planetSpriteTimer.Start();
+		Timer dinoSpriteTimer = Timer(0.5f);
+		dinoSpriteTimer.Start();
 		Timer meteorSpriteTimer = Timer(2.5f);
 		meteorSpriteTimer.Start();
 		Timer backgroundSpriteTimer = Timer(0.25f);
@@ -442,7 +451,8 @@ int main(void)
 		
 				//sentence1.SubmitForceRender(renderer);
 				//renderer.submitForceRender(&a);
-				startButtonTex.SubmitForceRender(renderer);
+				startButtonText.SubmitForceRender(renderer);
+				titleScreenText.SubmitForceRender(renderer);
 				//renderer.submitForceRender(&a);
 				////////////////////////////////////////////////////////////////////////////
 				cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
@@ -450,7 +460,36 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 				renderer.flush(viewMatrix, projectionMatrix);
 				///////////////////////////////////////////////////////////////////////////
+				//FIND ME 0
+				if (!false) {
+					actNumber = 0;
+					score = 0;
+					lives = 3;
+					lungeReady = true;
+					movementEnabled = true;
+					clickingEnabled = true;
+					zoomEnabled = true;
+					gameOver = false;
+					shot = false;
+					midair = false;
+					submitAmmoRender = false;
+					flyEnabled = false;
+					lungeEnabled = false;
+					cursorEnabled = false;
+					shootingEnabled = false;
+					exploding = false;
+					steaming = false;
+					movementSpeed = 0.01f;
+					movementEnabled = true;
+					flyEnabled = true;
+					lungeEnabled = false;
+					cursorEnabled = false;
+					shootingEnabled = false;
+					scoreMultiplier = 5.0f;
+				}
 			}
+
+
 
 			// Yanni first act
 			if (actNumber == 0) {
@@ -534,7 +573,7 @@ int main(void)
 							glm::vec3 scale = food[i].GetScale();
 							float value = std::sqrtf(scale.x * scale.x + scale.y * scale.y + scale.z + scale.z);
 							int intValue = (int)((float)(value)*(scoreMultiplier));
-							planet.ScaleAdd3f(value / (scoreMultiplier * scoreMultiplier), value / (scoreMultiplier * scoreMultiplier), 0.0f);
+							planet.ScaleAdd3f(value / ((scoreMultiplier * scoreMultiplier) * 2), value / ((scoreMultiplier * scoreMultiplier) * 2), 0.0f);
 							planet.AddMass(food[i].GetMass());
 							score += intValue;
 							food[i].SetIsDisplayed(false);
@@ -568,7 +607,7 @@ int main(void)
 				}
 				///////////////////////////////////////////////////////////////////////////
 				// FIND ME 1
-				if (!anyDisplayed) {
+				if (!!anyDisplayed) {
 					actNumber = 1;
 					movementSpeed = 0.05f;
 					shootSpeed = 15.0f;
@@ -586,6 +625,11 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 				renderer.submit(&planet, camPos);
 				///////////////////////////////////////////////////////////////////////////
+				scoreLabel.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreLabel.SubmitForceRender(renderer);
+				scoreDisplay.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreDisplay.DisplayScore(score, renderer);
+				///////////////////////////////////////////////////////////////////////////
 
 				renderer.flush(viewMatrix, projectionMatrix);
 			} 
@@ -594,29 +638,17 @@ int main(void)
 				///////////////////////////////////////////////////////////////////////////
 				if (movementEnabled) {
 					if (dPressed) {
-						bool movable = true;
 						for (unsigned int i = 0; i < pools.size(); i++) {
 							glm::vec3 poolsTrans = pools[i].GetTranslation();
-							if (!(poolsTrans.x < 10.0f)) {
-								movable = false;
-							}
-						}
-						if (movable) {
-							for (unsigned int i = 0; i < pools.size(); i++) {
-								pools[i].TranslateAdd3f((movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f);
+							if (poolsTrans.y < 10.0f && pools[i].IsDisplayed() && poolsTrans.x < 7.5f) {
+								pools[i].TranslateAdd3f((movementSpeed / 0.007777)* deltaTime, 0.0f, 0.0f);
 							}
 						}
 					}
 					if (aPressed) {
-						bool movable = true;
 						for (unsigned int i = 0; i < pools.size(); i++) {
 							glm::vec3 poolsTrans = pools[i].GetTranslation();
-							if (!(poolsTrans.x > -10.0f)) {
-								movable = false;
-							}
-						}
-						if (movable) {
-							for (unsigned int i = 0; i < pools.size(); i++) {
+							if (poolsTrans.y < 10.0f && pools[i].IsDisplayed() && poolsTrans.x > -7.5f) {
 								pools[i].TranslateAdd3f((-movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f);
 							}
 						}
@@ -639,14 +671,29 @@ int main(void)
 				bool anyDisplayed = false;
 				for (unsigned int i = 0; i < pools.size(); i++) {
 					if (pools[i].IsDisplayed()) {
-						if (pools[i].GetDoesIntersect(lavaOne).GetDoesIntersect() || pools[i].GetDoesIntersect(lavaTwo).GetDoesIntersect()) {
+						if (pools[i].GetDoesIntersect(lavaOne).GetDoesIntersect()) {
 							pools[i].SetIsDisplayed(false);
 							steaming = true;
-							steam.TranslateVec3(pools[i].GetTranslation());
+							glm::vec3 changeInValues = pools[i].GetTranslation() - lavaOne.GetTranslation();
+							glm::vec3 value = pools[i].GetTranslation() - changeInValues / 2.0f;
+							steam.TranslateVec3(value);
 							steamTimer.Reset(0.4f);
 							steamTimer.Start();
 							steamSpriteTimer.Reset(0.1f);
 							steamSpriteTimer.Start();
+							score += 100;
+						}
+						else if (pools[i].GetDoesIntersect(lavaTwo).GetDoesIntersect()) {
+							pools[i].SetIsDisplayed(false);
+							steaming = true;
+							glm::vec3 changeInValues = pools[i].GetTranslation() - lavaTwo.GetTranslation();
+							glm::vec3 value = pools[i].GetTranslation() - changeInValues / 2.0f;
+							steam.TranslateVec3(value);
+							steamTimer.Reset(0.4f);
+							steamTimer.Start();
+							steamSpriteTimer.Reset(0.1f);
+							steamSpriteTimer.Start();
+							score += 100;
 						}
 						if (pools[i].GetTranslation().y < -10) {
 							pools[i].SetIsDisplayed(false);
@@ -658,7 +705,7 @@ int main(void)
 				}
 				///////////////////////////////////////////////////////////////////////////
 				// FIND ME 2
-				if (!anyDisplayed) {
+				if (!!anyDisplayed) {
 					actNumber = 2;
 					cursorEnabled = true;
 					shootingEnabled = true;
@@ -700,6 +747,13 @@ int main(void)
 						steamTimer.Start();
 					}
 				}
+
+				///////////////////////////////////////////////////////////////////////////
+				scoreLabel.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreLabel.SubmitForceRender(renderer);
+				scoreDisplay.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreDisplay.DisplayScore(score, renderer);
+				///////////////////////////////////////////////////////////////////////////
 
 				renderer.flush(viewMatrix, projectionMatrix);
 			}
@@ -862,7 +916,7 @@ int main(void)
 					}
 				}
 				// FIND ME 3
-				if (!anyDisplayed || lives == 0) {
+				if (!!anyDisplayed || lives == 0) {
 					actNumber = 3;
 					lives = 3;
 				}
@@ -896,6 +950,11 @@ int main(void)
 					cursor.Translate3f(cursorXPos * mouseSensitivity, -cursorYPos * mouseSensitivity, 0.002f);
 					renderer.submitForceRender(&cursor);
 				}
+				///////////////////////////////////////////////////////////////////////////
+				scoreLabel.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreLabel.SubmitForceRender(renderer);
+				scoreDisplay.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreDisplay.DisplayScore(score, renderer);
 				///////////////////////////////////////////////////////////////////////////
 				renderer.flush(viewMatrix, projectionMatrix);
 				///////////////////////////////////////////////////////////////////////////
@@ -948,8 +1007,9 @@ int main(void)
 					}
 				}
 				// FIND ME 4
-				if (!anyDisplayed || lives == -17) {
+				if (!!anyDisplayed || lives == -17) {
 					actNumber = 4;
+					movementEnabled = true;
 				}
 				meteorSpriteTimer.ElapseTime(deltaTime);
 				if (meteorSpriteTimer.HasFinished()) {
@@ -977,10 +1037,113 @@ int main(void)
 					}
 				}
 				///////////////////////////////////////////////////////////////////////////
+				scoreLabel.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreLabel.SubmitForceRender(renderer);
+				scoreDisplay.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreDisplay.DisplayScore(score, renderer);
+				///////////////////////////////////////////////////////////////////////////
 				renderer.flush(viewMatrix, projectionMatrix);
 				///////////////////////////////////////////////////////////////////////////
 			}
 
+
+
+			// Chris first act
+			if (actNumber == 4) {
+				///////////////////////////////////////////////////////////////////////////
+				if (zoomEnabled) {
+					if (wPressed) {
+						camera.MoveForward(deltaTime);
+					}
+					if (sPressed) {
+						camera.MoveBackward(deltaTime);
+					}
+				}
+				if (aPressed) {
+					if (dino.GetLinearVelocity().x > 0.0f) {
+						dino.ApplyLinearVelocity(glm::vec3(-((movementSpeed / 0.007777) * deltaTime), 0.0f, 0.0f));
+					}
+					else {
+						dino.StrafeLeft(deltaTime, movementSpeed);
+					}
+				}
+				if (dPressed) {
+					if (dino.GetLinearVelocity().x < 0.0f) {
+						dino.ApplyLinearVelocity(glm::vec3((movementSpeed / 0.007777) * deltaTime, 0.0f, 0.0f));
+					}
+					else {
+						dino.StrafeRight(deltaTime, movementSpeed);
+					}
+				}
+				if (spacePressed) {
+					if (dino.GetCanJump()) {
+						dino.SetCanJump(false);
+						dino.ApplyLinearVelocity(glm::vec3(0.0f, (5.0f / 0.007777) * deltaTime, 0.0f));
+					}
+				}
+				///////////////////////////////////////////////////////////////////////////
+				camera.Follow(dino);
+				glm::vec3 camPos = camera.GetTranslation();
+				///////////////////////////////////////////////////////////////////////////
+				glm::mat4 viewMatrix = camera.GetViewTransformMatrix();
+				glm::mat4 projectionMatrix;
+				if (currentWidth > 0 && currentHeight > 0) {
+					projectionMatrix = glm::perspective(glm::radians(FOV), (float)currentWidth / (float)currentHeight, 0.1f, 150.0f);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submitForceRender(&background);
+				///////////////////////////////////////////////////////////////////////////
+				dinoSpriteTimer.ElapseTime(deltaTime);
+				if (dinoSpriteTimer.HasFinished()) {
+					dino.Play(frames, 4);
+					dinoSpriteTimer.Reset(0.5f);
+					dinoSpriteTimer.Start();
+				}
+				///////////////////////////////////////////////////////////////////////////
+				dino.UpdateCollision(deltaTime, ground);
+				/*dino.Update(deltaTime);
+				if (dino.GetTranslation().y < 1.0f) {
+					glm::vec3 previousVel = dino.GetLinearVelocity();
+					glm::vec3 previousPos = dino.GetTranslation();
+					dino.SetLinearVelocity(glm::vec3(previousVel.x, 0.0f, previousVel.z));
+					dino.SetCanJump(true);
+					dino.TranslateVec3(glm::vec3(previousPos.x, 1.0f, 0.0f));
+				}
+				else {
+				}*/
+				bool anyDisplayed = false;
+				for (unsigned int i = 0; i < ground.size(); i++) {
+					renderer.submit(&ground[i], camPos);
+					anyDisplayed = true;
+				}
+				///////////////////////////////////////////////////////////////////////////
+				// FIND ME 5
+				if (!anyDisplayed) {
+					actNumber = 1;
+					movementSpeed = 0.05f;
+					shootSpeed = 15.0f;
+					glfwSetCursorPos(window, 0.0, 0.0);
+					movementEnabled = true;
+					flyEnabled = false;
+					lungeEnabled = false;
+					cursorEnabled = false;
+					shootingEnabled = false;
+					scoreMultiplier = 5.0f;
+					dino.Scale3f(1.0f, 1.0f, 1.0f);
+					dino.Translate3f(0.0f, 0.0f, 0.0f);
+					camera.Translate3f(0.0f, 1.0f, 5.0f);
+				}
+				///////////////////////////////////////////////////////////////////////////
+				renderer.submit(&dino, camPos);
+				///////////////////////////////////////////////////////////////////////////
+				scoreLabel.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreLabel.SubmitForceRender(renderer);
+				scoreDisplay.TranslateVec3(glm::vec3(camPos.x, camPos.y, 0.0f));
+				scoreDisplay.DisplayScore(score, renderer);
+				///////////////////////////////////////////////////////////////////////////
+
+				renderer.flush(viewMatrix, projectionMatrix);
+			}
 			/*{
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}*/

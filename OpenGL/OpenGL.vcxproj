@@ -163,6 +163,7 @@
     <ClCompile Include="src\rendering\Player.cpp" />
     <ClCompile Include="src\primitives\ShapeGenerator.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\rendering\ScoreDisplay.cpp" />
     <ClCompile Include="src\rendering\Shader.cpp" />
     <ClCompile Include="src\rendering\Simple2DRenderer.cpp" />
     <ClCompile Include="src\rendering\Sprite.cpp" />
@@ -308,6 +309,7 @@
     <ClInclude Include="src\primitives\ShapeData.h" />
     <ClInclude Include="src\primitives\Vertex.h" />
     <ClInclude Include="src\rendering\Renderer2D.h" />
+    <ClInclude Include="src\rendering\ScoreDisplay.h" />
     <ClInclude Include="src\rendering\Shader.h" />
     <ClInclude Include="src\rendering\Simple2DRenderer.h" />
     <ClInclude Include="src\rendering\Sprite.h" />

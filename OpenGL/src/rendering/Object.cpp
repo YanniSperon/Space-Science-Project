@@ -295,3 +295,23 @@ void Object::SetUniformMat4(const std::string& name, glm::mat4 mat)
 {
 	shader.SetUniformMat4f(name, mat);
 }
+
+void Object::StrafeLeft(float deltaT, float movementSpeed)
+{
+	TranslateSubtract3f((movementSpeed / 0.007777) * deltaT, 0.0f, 0.0f);
+}
+
+void Object::StrafeRight(float deltaT, float movementSpeed)
+{
+	TranslateAdd3f((movementSpeed / 0.007777) * deltaT, 0.0f, 0.0f);
+}
+
+void Object::MoveUp(float deltaT, float movementSpeed)
+{
+	TranslateAdd3f(0.0f, (movementSpeed / 0.007777) * deltaT, 0.0f);
+}
+
+void Object::MoveDown(float deltaT, float movementSpeed)
+{
+	TranslateSubtract3f(0.0f, (movementSpeed / 0.007777) * deltaT, 0.0f);
+}

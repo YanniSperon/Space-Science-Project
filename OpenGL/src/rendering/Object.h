@@ -26,4 +26,9 @@ public:
 	unsigned int GetNumIndices();
 	void PlayFrame(GLuint nextFrame);
 	void SetUniformMat4(const std::string& name, glm::mat4 mat);
+
+	void StrafeLeft(float deltaT, float movementSpeed);
+	void StrafeRight(float deltaT, float movementSpeed);
+	void MoveUp(float deltaT, float movementSpeed);
+	void MoveDown(float deltaT, float movementSpeed);
 };

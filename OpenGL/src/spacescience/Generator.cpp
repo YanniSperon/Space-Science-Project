@@ -105,6 +105,6 @@ void Generator::AddRandomIncomingMeteorFast(std::vector<CollidableSprite>& vec, 
 
 void Generator::AddPool(std::vector<CollidableSprite>& vec, texCoords texCoord, GLuint image, GLuint value)
 {
-	float xPos = (float)((rand() / (float)RAND_MAX * 4) - 2);
+	float xPos = (float)((rand() / (float)RAND_MAX * 10) - 5);
 	vec.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(xPos, ((float)value) * 10.0f + 5.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), 0.0f, texCoord.bottomLeft, texCoord.topRight, image, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -0.75f, 0.0f), 1.0f));
 }
