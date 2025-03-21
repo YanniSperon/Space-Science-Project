@@ -5,8 +5,8 @@ IntersectData::IntersectData()
 {
 }
 
-IntersectData::IntersectData(const bool intersects, const float dist)
-	: doesIntersect(intersects), distance(dist)
+IntersectData::IntersectData(const bool intersects, const float dist, const glm::vec3 dir)
+	: doesIntersect(intersects), distance(dist), direction(dir)
 {
 
 }

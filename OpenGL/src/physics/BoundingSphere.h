@@ -11,7 +11,7 @@ public:
 	BoundingSphere(const glm::vec3 center, float radius);
 	~BoundingSphere();
 
-	IntersectData IntersectBoundingSphere(const BoundingSphere& other);
+	//IntersectData IntersectBoundingSphere(const BoundingSphere& other);
 
 	inline const glm::vec3& GetCenter() const { return center; }
 	inline float GetRadius() const { return radius; }

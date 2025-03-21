@@ -208,7 +208,7 @@ glm::vec3 Mesh::GetTranslation() const
 	return translation;
 }
 
-glm::vec3 Mesh::GetRotation()
+glm::vec3 Mesh::GetRotation() const
 {
 	return rotation;
 }

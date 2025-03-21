@@ -242,15 +242,25 @@ int main(void)
 		const char* selectSFXFilename = "res/audio/sfx/select.wav";
 		const char* shootSFXFilename = "res/audio/sfx/shoot.wav";
 		const char* steamSFXFilename = "res/audio/sfx/steam.wav";
+		const char* crumpleSFXFilename = "res/audio/sfx/crumple.wav";
+		const char* titleMusicFilename = "res/audio/background/titlemusic.wav";
+		const char* lavaMusicFilename = "res/audio/background/lavamusic.wav";
+		const char* vacuumFilename = "res/audio/background/vacuum.wav";
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		engine->setSoundVolume(0);
-		irrklang::ISound* attackSFX = engine->play2D(attackSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* explosionSFX = engine->play2D(explosionSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* jumpSFX = engine->play2D(jumpSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* pickupSFX = engine->play2D(pickupSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* selectSFX = engine->play2D(selectSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* shootSFX = engine->play2D(shootSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
-		irrklang::ISound* steamSFX = engine->play2D(steamSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+		engine->setSoundVolume(1.0f);
+		engine->addSoundSourceFromFile(attackSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(explosionSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(jumpSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(pickupSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(selectSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(shootSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(steamSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(crumpleSFXFilename, irrklang::ESM_AUTO_DETECT, true);
+
+		engine->addSoundSourceFromFile(vacuumFilename, irrklang::ESM_AUTO_DETECT, true);
+
+		engine->addSoundSourceFromFile(titleMusicFilename, irrklang::ESM_AUTO_DETECT, true);
+		engine->addSoundSourceFromFile(lavaMusicFilename, irrklang::ESM_AUTO_DETECT, true);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint frames[4] = { 
 			Loader::loadSpriteSheet("res/images/sprites/", "f1.png", GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST),
@@ -274,18 +284,18 @@ int main(void)
 		Object volcanoBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
 		Object mainMenuBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), mainMenuTex);
 		Object endMenuBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), glm::vec2(-10.0f, -5.0f), glm::vec2(10.0f, 5.0f), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), endMenuTex);
-		CollidableSprite planet = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite planet = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.9375f), glm::vec2(0.0625f, 1.0f), frames[0], 0, -1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f, CollidableSprite::BodyType::circle);
 		texCoords dinoCoords = Loader::getImageCoordinates(14, 0, 16, 1, 16, 16);
-		CollidableSprite dino = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), 0.0f, dinoCoords.bottomLeft, dinoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite dino = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-1.0f, -0.5f), glm::vec2(1.0f, 0.5f), 0.0f, dinoCoords.bottomLeft, dinoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
 		Object chrisBackground = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-15.0f, -7.5f), glm::vec2(15.0f, 7.5), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), volcanoBackgroundFrame);
 		Object background = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-500.0f, -250.0f), glm::vec2(500.0f, 250.0), -1.0f, glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), spaceBckgrnd);
-		CollidableSprite cursor = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite cursor = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.002f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 1.0f, cursorCoords.bottomLeft, cursorCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> ground;
 		for (unsigned int i = 0; i < 25; i++) {
-			float randomDistance = (float)((rand() / (float)RAND_MAX * 4.0f));
+			float randomDistance = ((((float)rand() / (float)RAND_MAX) * 2.5f)) + (5.0f*((float)i));
 			float randomY = (float)((rand() / (float)RAND_MAX * 1.0f));
-			ground.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(i * 5.0f + randomDistance, randomY, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-2.5f, -0.5f), glm::vec2(2.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(5.0f, 1.0f), grassTex, 0, 1.0f, glm::vec3(-5.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+			ground.push_back(CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(randomDistance, randomY, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.25f, -0.5f), glm::vec2(1.25f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(5.0f, 1.0f), grassTex, 0, -1.0f, glm::vec3(-5.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle));
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> food;
@@ -296,11 +306,11 @@ int main(void)
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords ammoCoords = Loader::getImageCoordinates(0, 14, 2, 15, 16, 16);
-		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.001f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite ammo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.001f, ammoCoords.bottomLeft, ammoCoords.topRight, frames[0], 0, -1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
 		Simple2DRenderer renderer;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords satelliteCoords = Loader::getImageCoordinates(0, 11, 2, 13, 16, 16);
-		CollidableSprite satellite = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, satelliteCoords.bottomLeft, satelliteCoords.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite satellite = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, satelliteCoords.bottomLeft, satelliteCoords.topRight, frames[0], 0, -1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::circle);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::vector<CollidableSprite> incomingMeteors;
 		for (unsigned int i = 0; i < 10; i++) {
@@ -317,11 +327,10 @@ int main(void)
 		for (unsigned int i = 0; i < 10; i++) {
 			Generator::AddPool(pools, pool, frames[0], i);
 		}
-		CollidableSprite p = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, pool.bottomLeft, pool.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords lavaTexCoords = Loader::getImageCoordinates(0, 9, 1, 10, 16, 16);
-		CollidableSprite lavaOne = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(6.5f, 0.45, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, lavaTexCoords.bottomLeft, lavaTexCoords.topRight, frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
-		CollidableSprite lavaTwo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-6.5f, 0.45f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(lavaTexCoords.topRight.x, lavaTexCoords.bottomLeft.y), glm::vec2(lavaTexCoords.bottomLeft.x, lavaTexCoords.topRight.y), frames[0], 0, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f);
+		CollidableSprite lavaOne = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(6.5f, 0.45, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, lavaTexCoords.bottomLeft, lavaTexCoords.topRight, frames[0], 0, -1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
+		CollidableSprite lavaTwo = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-6.5f, 0.45f, 0.0f), glm::vec3(1.75f, 1.75f, 1.75f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(lavaTexCoords.topRight.x, lavaTexCoords.bottomLeft.y), glm::vec2(lavaTexCoords.bottomLeft.x, lavaTexCoords.topRight.y), frames[0], 0, -1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, -9.807f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		texCoords volcanoTexCoords = Loader::getImageCoordinates(0, 0, 5, 3, 16, 16);
 		Object volcanoOne = Object(type::rectangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-5.0f, -3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), glm::vec2(-5.0f, -2.5f), glm::vec2(5.0f, 2.5f), -0.5f, volcanoTexCoords.bottomLeft, volcanoTexCoords.topRight, frames[0]);
@@ -334,7 +343,7 @@ int main(void)
 		Sprite steam = Sprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), glm::vec2(-1.0f, -1.0f), glm::vec2(1.0f, 1.0f), 0.003f, steamTexCoords.bottomLeft, steamTexCoords.topRight, frames[0], 0);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		GLuint blackTex = 0;
-		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.25f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blackTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite startButton = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.25f, 0.0f), glm::vec3(3.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.0f, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), blackTex, 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::rectangle);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		Letters startButtonText = Letters("Start", lettersTex, 1, glm::vec2(-1.2f, -0.4f), glm::vec2(1.2f, 0.4f), glm::vec3(0.25f, 0.5f, 0.0f));
 		Letters titleScreenText = Letters("Welcome to game", lettersOutlined3PXTex, 1, glm::vec2(-4.2f, -0.4f), glm::vec2(4.2f, 0.4f), glm::vec3(0.25f, 2.0f, 0.0f));
@@ -343,7 +352,7 @@ int main(void)
 		////////////////////////////////////////////////////////////////////
 		Letters scoreLabel = Letters("Score:", lettersOutlined3PXTex, 1, glm::vec2(-1.2f, -0.2f), glm::vec2(1.2f, 0.2f), glm::vec3(5.5f, 3.5f, 0.0f));
 		ScoreDisplay scoreDisplay = ScoreDisplay(glm::vec2(-1.0f, -0.2f), glm::vec2(1.0f, 0.2f), 5, glm::vec3(8.0f, 3.5f, 0.0f), lettersOutlined3PXTex);
-		CollidableSprite meteorThatKillsPlayerInChrisGame = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.002f, meteor.bottomLeft, meteor.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+		CollidableSprite meteorThatKillsPlayerInChrisGame = CollidableSprite(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(-0.5f, -0.5f), glm::vec2(0.5f, 0.5f), 0.002f, meteor.bottomLeft, meteor.topRight, frames[0], 0, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, CollidableSprite::BodyType::circle);
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////
@@ -375,6 +384,8 @@ int main(void)
 		steamTimer.Start();
 		Timer steamSpriteTimer = Timer(0.1f);
 		steamSpriteTimer.Start();
+		Timer jumpTimer = Timer(0.5f);
+		jumpTimer.Start();
 		Timer lungeTimer = Timer(2.5f);
 		Timer meteorTimer = Timer(15.0f);
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -408,7 +419,8 @@ int main(void)
 		shootingEnabled = false;
 		scoreMultiplier = 5.0f;
 		planet.SetGravitationalAcceleration(glm::vec3(0.0f, 0.0f, 0.0f));
-		engine->setSoundVolume(1.0f);
+		engine->play2D(titleMusicFilename, true, false, false, irrklang::ESM_AUTO_DETECT, false);
+		float totalTimeT = 0.0f;
 		// mine is 0,1,2, mark is 3,4, and chris is 5
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		/*ImGui::CreateContext();
@@ -459,6 +471,10 @@ int main(void)
 					glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 					if (leftClicked) {
 						if (startButton.IsPointInside(cursor.GetTranslation()).GetDoesIntersect()) {
+							engine->stopAllSounds();
+							engine->play2D(selectSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
+							engine->setSoundVolume(0.1f);
+							engine->play2D(vacuumFilename, true, false, false, irrklang::ESM_AUTO_DETECT, false);
 							actNumber = 0;
 							score = 0;
 							lives = 3;
@@ -623,8 +639,9 @@ int main(void)
 								float value = std::sqrtf(scale.x * scale.x + scale.y * scale.y + scale.z + scale.z);
 								int intValue = (int)((float)(value) * (scoreMultiplier));
 								planet.ScaleAdd3f(value / ((scoreMultiplier * scoreMultiplier) * 2), value / ((scoreMultiplier * scoreMultiplier) * 2), 0.0f);
-								planet.AddMass(food[i].GetMass());
+								planet.AddMass(food[i].GetMass()*2);
 								score += intValue;
+								engine->play2D(crumpleSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
 								food[i].SetIsDisplayed(false);
 							}
 							else {
@@ -654,9 +671,14 @@ int main(void)
 							anyDisplayed = true;
 						}
 					}
+					totalTimeT += deltaTime;
+					engine->setSoundVolume(glm::clamp((static_cast<float>(static_cast<int>(totalTimeT) % static_cast<int>(82.0f)) / 82.0f) * 0.5f, 0.1f, 1.0f));
 					///////////////////////////////////////////////////////////////////////////
 					// FIND ME 1
 					if (!anyDisplayed) {
+						engine->stopAllSounds();
+						engine->setSoundVolume(1.0f);
+						engine->play2D(lavaMusicFilename, true, false, false, irrklang::ESM_AUTO_DETECT, false);
 						actNumber = 1;
 						movementSpeed = 0.05f;
 						shootSpeed = 15.0f;
@@ -758,6 +780,7 @@ int main(void)
 					// FIND ME 2
 					if (!anyDisplayed) {
 						actNumber = 2;
+						engine->stopAllSounds();
 						cursorEnabled = true;
 						shootingEnabled = true;
 						movementEnabled = false;
@@ -1061,6 +1084,7 @@ int main(void)
 					if (!anyDisplayed || lives == -17) {
 						actNumber = 4;
 						movementEnabled = true;
+						engine->play2D(lavaMusicFilename, true, false, false, irrklang::ESM_AUTO_DETECT, false);
 					}
 					meteorSpriteTimer.ElapseTime(deltaTime);
 					if (meteorSpriteTimer.HasFinished()) {
@@ -1102,9 +1126,12 @@ int main(void)
 				// Chris first act
 				if (actNumber == 4) {
 					///////////////////////////////////////////////////////////////////////////
+					jumpTimer.ElapseTime(deltaTime);
 					dino.StrafeRight(deltaTime, movementSpeed);
 					if (spacePressed) {
-						if (dino.GetCanJump()) {
+						if (dino.GetCanJump() && jumpTimer.HasFinished()) {
+							jumpTimer.Reset(0.5f);
+							jumpTimer.Start();
 							dino.SetCanJump(false);
 							dino.ApplyLinearVelocity(glm::vec3(0.0f, 3.0f, 0.0f));
 							engine->play2D(jumpSFXFilename, false, false, false, irrklang::ESM_AUTO_DETECT, false);
@@ -1130,9 +1157,13 @@ int main(void)
 						dinoSpriteTimer.Start();
 					}
 					///////////////////////////////////////////////////////////////////////////
-					dino.UpdateCollision(deltaTime, ground, aPressed, dPressed);
+					if (dino.UpdateCollision(deltaTime, ground)) {
+						dino.SetCanJump(true);
+					}
+
 					if (dino.GetTranslation().y < -1.0f) {
 						gameOver = true;
+						engine->stopAllSounds();
 					}
 					bool anyDisplayed = false;
 					for (unsigned int i = 0; i < ground.size(); i++) {
@@ -1143,6 +1174,7 @@ int main(void)
 					// FIND ME 5
 					if (gameOver) {
 						actNumber = 5;
+						engine->play2D(titleMusicFilename, true, false, false, irrklang::ESM_AUTO_DETECT, false);
 						firstTime = true;
 					}
 					///////////////////////////////////////////////////////////////////////////
@@ -1164,6 +1196,7 @@ int main(void)
 				if (actNumber == 5) {
 					if (leftClicked) {
 						quitGame = true;
+						engine->stopAllSounds();
 					}
 					camera.Translate3f(0.0f, 0.0f, 5.0f);
 					renderer.submitForceRender(&endMenuBackground);
@@ -1189,26 +1222,7 @@ int main(void)
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
-
-		if (shootSFX) {
-			shootSFX->drop();
-		}
-		if (attackSFX) {
-			attackSFX->drop();
-		}
-		if (explosionSFX) {
-			explosionSFX->drop();
-		}
-		if (jumpSFX) {
-			jumpSFX->drop();
-		}
-		if (pickupSFX) {
-			pickupSFX->drop();
-		}
-		if (selectSFX) {
-			selectSFX->drop();
-		}
-
+		engine->removeAllSoundSources();
 		engine->drop();
 	}
 

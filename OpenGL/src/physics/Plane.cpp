@@ -24,10 +24,10 @@ Plane Plane::Normalized() const
 	return Plane(normal / magnitude, distance / magnitude);
 }
 
-IntersectData Plane::IntersectSphere(const BoundingSphere& other) const
-{
-	float distanceFromSphereCenter = fabs(glm::dot(normal, other.GetCenter()) + distance);
-	float distanceFromSphere = distanceFromSphereCenter - other.GetRadius();
-
-	return IntersectData(distanceFromSphere < 0, distanceFromSphere);
-}
+//IntersectData Plane::IntersectSphere(const BoundingSphere& other) const
+//{
+//	float distanceFromSphereCenter = fabs(glm::dot(normal, other.GetCenter()) + distance);
+//	float distanceFromSphere = distanceFromSphereCenter - other.GetRadius();
+//
+//	return IntersectData(distanceFromSphere < 0, distanceFromSphere);
+//}

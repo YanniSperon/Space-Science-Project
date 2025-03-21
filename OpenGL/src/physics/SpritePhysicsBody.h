@@ -18,8 +18,6 @@ public:
 	~SpritePhysicsBody();
 
 	void Update(float delta);
-	void ReverseLastUpdate(float delta);
-	void ReverseLastVelocityUpdate(float delta);
 
 	void Stop();
 	void StopX();
@@ -28,7 +26,7 @@ public:
 
 	glm::vec3 GetLinearAcceleration();
 	glm::vec3 GetLinearAccelerationWithoutGravity();
-	glm::vec3 GetLinearVelocity();
+	glm::vec3 GetLinearVelocity() const;
 
 
 
@@ -48,7 +46,7 @@ public:
 
 	void SetGravitationalAcceleration(glm::vec3 gravity);
 
-	float GetMass();
+	float GetMass() const;
 	void SetMass(float newMass);
 	void AddMass(float newMass);
 

@@ -13,7 +13,7 @@ public:
 	~Plane();
 
 	Plane Normalized() const;
-	IntersectData IntersectSphere(const BoundingSphere& other) const;
+	//IntersectData IntersectSphere(const BoundingSphere& other) const;
 
 	inline const glm::vec3& GetNormal() const { return normal; }
 	inline float GetDistance() const { return distance; }

@@ -23,17 +23,6 @@ void SpritePhysicsBody::Update(float delta)
 	TranslateAddVec3(linearVelocity * delta);
 }
 
-void SpritePhysicsBody::ReverseLastUpdate(float delta)
-{
-	linearVelocity -= gravitationalAcceleration * delta;
-	TranslateSubtractVec3(linearVelocity * delta);
-}
-
-void SpritePhysicsBody::ReverseLastVelocityUpdate(float delta)
-{
-	linearVelocity -= gravitationalAcceleration * delta;
-}
-
 void SpritePhysicsBody::Stop()
 {
 	linearVelocity = angularVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -64,7 +53,7 @@ glm::vec3 SpritePhysicsBody::GetLinearAccelerationWithoutGravity()
 	return glm::vec3(force / mass);
 }
 
-glm::vec3 SpritePhysicsBody::GetLinearVelocity()
+glm::vec3 SpritePhysicsBody::GetLinearVelocity() const
 {
 	return linearVelocity;
 }
@@ -124,7 +113,7 @@ void SpritePhysicsBody::SetGravitationalAcceleration(glm::vec3 gravity)
 	gravitationalAcceleration = gravity;
 }
 
-float SpritePhysicsBody::GetMass()
+float SpritePhysicsBody::GetMass() const
 {
 	return mass;
 }

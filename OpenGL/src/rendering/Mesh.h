@@ -51,7 +51,7 @@ public:
 	void SetIsDisplayed(bool newValue);
 
 	glm::vec3 GetTranslation() const;
-	glm::vec3 GetRotation();
+	glm::vec3 GetRotation() const;
 	glm::vec3 GetScale() const;
 	glm::vec3 GetSize() const;
 	bool IsDisplayed();
